@@ -25,7 +25,7 @@ module Bemonrails
 	            target = File.join path, element(name), element(name)
 	            # Element details
 	            @element_name = name
-	            @element_mods = builder[:mods]
+	            @element_mods = builder[:elemMods]
 	            puts @element_mods
 	            @content = builder[:content]
 	            # Render element in block

@@ -1,6 +1,3 @@
-# Please unforget add this string to application.rb
-# config.autoload_paths += %W(#{config.root}/lib)
-
 BEM = {}
 
 # List of known techs.
