@@ -129,6 +129,7 @@ If you want it, please watch [here](https://github.com/Vasfed/csso-rails).
 
 ## Tomorrow
 
+0. Incapsulate helpers methods and isolate them from project helpers.
 1. Rendering blocks in block.
 2. Custom tag for block or element.
 3. Add attrs for blocks and elements.
