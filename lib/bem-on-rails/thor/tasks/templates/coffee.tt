@@ -1,0 +1,4 @@
+# CoffeeScript
+# Example:
+# $('<%= @css_class %>').click ->
+#   $('body').hide()

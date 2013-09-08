@@ -1,0 +1,8 @@
+- if @content.kind_of?(Array)
+	- @content.each do |essence|
+		- if essence.kind_of?(Hash) && essence[:element]
+			= e essence[:element], { content: essence[:content], mods: essence[:mods] }
+		- else
+			= essence
+- else
+	= @content
