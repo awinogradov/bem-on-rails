@@ -1,6 +1,6 @@
-# BEM On Rails
+# BEM on Rails
 
-Work with BEM methodology in Rails applications. BEM On Rails is ruby copy from bem-tools. 
+Work with BEM methodology in Rails applications. BEM on Rails is ruby copy from bem-tools. 
 You can read about bem-tools [here](http://bem.info/tools/bem/) and BEM methodology [here](http://bem.info/method/).
 
 ## Installation
