@@ -32,8 +32,7 @@ You can customize everythink!
 
 ## Usage
 
-You can create blocks, elements, modificators and groups for blocks. It's awesome! Also you can remove them and watch
-lists of blocks, block elements, blocks mods and etc. Try thor help for more info.
+You can create blocks, elements, modificators and groups for blocks. It's awesome! Also you can remove them and watch lists of blocks, block elements, blocks mods and etc. Try thor help for more info.
 
 Default blocks folder structure:
  - **blocks**
