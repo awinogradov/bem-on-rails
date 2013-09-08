@@ -45,9 +45,6 @@ Default blocks folder structure:
      - **mods**
        - **_mod_name**
          - **_mod_value**
-           - _mod_value.css.sass
-           - _mod_value.coffee
-           - _mod_value.md
          - _mod_name.css.sass
          - _mod_name.coffee
          - _mod_name.md
