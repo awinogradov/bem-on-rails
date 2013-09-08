@@ -1,9 +1,5 @@
-require "bem/on/rails/version"
+require "bem-on-rails/version"
 
-module Bem
-  module On
-    module Rails
-      # Your code goes here...
-    end
-  end
+module Bemonrails
+	# Your code goes here...
 end

@@ -1,7 +1,7 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'bem/on/rails/version'
+require 'bem-on-rails/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "bem-on-rails"
@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["winogradovaa@gmail.com"]
   spec.description   = %q{Gem for work with BEM methodology in Rails applications}
   spec.summary       = %q{BEM Tools for Rails applications}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/verybigman/bem-on-rails"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
