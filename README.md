@@ -26,7 +26,8 @@ You should run to watch your new instruments:
     
     $ thor -T 
     
-Also generator creates initializer bem.rb with BEM constant. You can customize everythink!
+Also generator creates initializer bem.rb with BEM constant. You should restart server after install. 
+You can customize everythink!
 
 ## Usage
 
