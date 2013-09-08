@@ -8,7 +8,7 @@ module Bemonrails
       def add_render_helpers
       	app_helper = 'app/helpers/application_helper.rb'
       	first_string = "module ApplicationHelper"
-      	bem_render_helpers = "\n\t# Add BEM blocks rendering helpers\n\tinclude Bemonrails::BemRenderHelper"
+      	bem_render_helpers = "\n\t# Add BEM blocks rendering helpers\n\tinclude Bemonrails::BemRenderHelper\n"
 
       	insert_into_file app_helper, bem_render_helpers, :after => first_string
       end
@@ -16,14 +16,23 @@ module Bemonrails
       def add_blocks_folder
       	app_controller = 'app/controllers/application_controller.rb'
       	protection_str = "protect_from_forgery\n"
-      	bem_block_folder = "\n\t# Add BEM blocks folder to default views scope\n\tbefore_filter { prepend_view_path(BEM[:blocks][:dir]) }"
+      	bem_block_folder = "\n\t# Add BEM blocks folder to default views scope\n\tbefore_filter { prepend_view_path(BEM[:blocks][:dir]) }\n"
 
       	insert_into_file app_controller, bem_block_folder, :after => protection_str
       end
 
+      def add_initializer
+      	template "initializer.tt", File.join(Rails.root, "config", "initializers", "bem.rb")
+      end
+
       def install_bem_tasks
-      	puts "\nDo you wish to install BEM as Thor tasks [y/N]?"
-      	`thor install https://github.com/verybigman/bem-on-rails/blob/master/lib/bem-on-rails/tasks/bem.thor?raw=true --as bem`
+      	template "bem.tt", File.join(Rails.root, "lib", "tasks", "bem.thor") 
+      end
+
+      def add_blocks_templates
+      	%w(haml.tt coffee.tt md.tt sass.tt).each do |t|
+      		template t, File.join(Rails.root, "lib", "tasks", "templates", t) 
+      	end
       end
 
     end
