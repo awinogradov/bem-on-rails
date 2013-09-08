@@ -6,7 +6,7 @@ module Bemonrails
       source_root File.expand_path("../templates/", __FILE__)
 
       def add_render_helpers
-      	app_helper = 'app/helpers/application_helpers.rb'
+      	app_helper = 'app/helpers/application_helper.rb'
       	first_string = "module ApplicationHelper"
       	bem_render_helpers = "\n\t# Add BEM blocks rendering helpers\n\tinclude Bemonrails::BemRenderHelper"
 
@@ -22,9 +22,10 @@ module Bemonrails
       end
 
       def install_bem_tasks
-      	puts "Do you wish to install BEM as thor tasks [y/N]?"
-      	`thor install https://github.com/verybigman/bem-on-rails/blob/master/lib/bem-on-rails/thor/tasks/bem.thor?raw=true --as bem`
+      	puts "\nDo you wish to install BEM as Thor tasks [y/N]?"
+      	`thor install https://github.com/verybigman/bem-on-rails/blob/master/lib/bem-on-rails/tasks/bem.thor?raw=true --as bem`
       end
+
     end
   end
 end
