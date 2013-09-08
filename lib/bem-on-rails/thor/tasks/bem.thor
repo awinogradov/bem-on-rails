@@ -7,7 +7,7 @@ class Bem < Thor
     # Templates for techs
     source_root File.expand_path('../templates', __FILE__)
 
-    desc 'create bem essences', 'Create block, element or mod'
+    desc 'create', 'Create block, element or mod'
     method_option :block, type: :string, aliases: "-b", desc: "Create block in default techs."
     method_option :element, type: :string, aliases: "-e", desc: "Create element in default techs. Use with block param."
     method_option :mod, type: :string, aliases: "-m", desc: "Create modificator for block or element."
@@ -46,7 +46,7 @@ class Bem < Thor
 
 
 
-    desc 'remove bem essences', 'Remove block, element or mod'
+    desc 'remove', 'Remove block, element or mod'
     method_option :block, type: :string, aliases: "-b", desc: "Remove block in default techs."
     method_option :element, type: :string, aliases: "-e", desc: "Remove element in default techs. Use with block param."
     method_option :mod, type: :string, aliases: "-m", desc: "Remove modificator for block or element."
@@ -84,7 +84,7 @@ class Bem < Thor
 
 
 
-    desc 'usage bem essences', 'Essence usage information'
+    desc 'usage', 'Essence usage information'
     method_option :block, type: :string, aliases: "-b", desc: "Block usage."
     method_option :element, type: :string, aliases: "-e", desc: "Element usage"
     method_option :mod, type: :string, aliases: "-m", desc: "Mod usage."
@@ -108,7 +108,7 @@ class Bem < Thor
 
 
 
-    desc 'list of bem essences', 'See list of group, block elements, mods and etc.'
+    desc 'list', 'See list of group, block elements, mods and etc.'
     method_option :block, type: :string, aliases: "-b", desc: "All block elements, mods and mods values"
     method_option :element, type: :string, aliases: "-e", desc: "All element mods and mods values"
     method_option :mod, type: :string, aliases: "-m", desc: "All mod values."

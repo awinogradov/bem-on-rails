@@ -22,7 +22,8 @@ module Bemonrails
       end
 
       def install_bem_tasks
-      	invoke "install https://github.com/verybigman/bem-on-rails"
+      	puts "Do you wish to install BEM as thor tasks [y/N]?"
+      	`thor install https://github.com/verybigman/bem-on-rails/blob/master/lib/bem-on-rails/thor/tasks/bem.thor?raw=true --as bem`
       end
     end
   end
