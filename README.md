@@ -1,3 +1,5 @@
+[![Bem on Rails](http://habrastorage.org/storage3/551/97d/0c5/55197d0c503e312952195b2ae0e4c337.png)](https://github.com/verybigman/bem-on-rails)
+
 # BEM on Rails
 
 Work with BEM methodology in Rails applications. BEM on Rails is ruby copy from bem-tools. 
