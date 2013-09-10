@@ -120,6 +120,11 @@ Block with custom attributes for tag:
 = b "test", attrs: {src: "/img.png"}, content: []
 ```
 
+Block with custom class for tag:
+```ruby
+= b "test", cls: "custom", content: []
+```
+
 Syntax is look like [bemhtml](http://ru.bem.info/articles/bemhtml-reference/).
 
 ### Templates
