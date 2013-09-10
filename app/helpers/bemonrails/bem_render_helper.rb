@@ -12,6 +12,7 @@ module Bemonrails
 	            @block_name = name
 	            @block_mods = builder[:mods]
                 @custom_attrs = builder[:attrs]
+                @custom_class = builder[:cls]
 	            @content = builder[:content]
 	            # Render block in view  
 	            template_exists?(target) ? render(file: target) : bemempty
@@ -28,6 +29,7 @@ module Bemonrails
 	            @element_name = name
 	            @element_mods = builder[:elemMods]
                 @custom_attrs = builder[:attrs]
+                @custom_class = builder[:cls]
 	            puts @element_mods
 	            @content = builder[:content]
 	            # Render element in block
@@ -68,8 +70,17 @@ module Bemonrails
 	            end
 	        end
 
-	        bemattributes = { class: classes_array.join(" ") }
+            bemclass = classes_array.join(" ")
 
+            # If custom class exist
+            if @custom_class
+                bemclass = [bemclass, @custom_class].join(" ")
+            end
+
+            # String for tag attributes
+	        bemattributes = { class: bemclass }
+
+            # If custom attributes exist
             if @custom_attrs
                 bemattributes.merge! @custom_attrs
             end
