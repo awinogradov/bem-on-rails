@@ -11,6 +11,7 @@ module Bemonrails
 	            # Block details
 	            @block_name = name
 	            @block_mods = builder[:mods]
+                @custom_attrs = builder[:attrs]
 	            @content = builder[:content]
 	            # Render block in view  
 	            template_exists?(target) ? render(file: target) : bemempty
@@ -26,6 +27,7 @@ module Bemonrails
 	            # Element details
 	            @element_name = name
 	            @element_mods = builder[:elemMods]
+                @custom_attrs = builder[:attrs]
 	            puts @element_mods
 	            @content = builder[:content]
 	            # Render element in block
@@ -34,7 +36,7 @@ module Bemonrails
 	    end
 	    alias :e :render_element
 
-	    def render_class 
+	    def render_bemattributes
 	        if @block_name && !@element_name 
 	            classes_array = [ block(@block_name) ]
 	            # Install mods
@@ -66,9 +68,15 @@ module Bemonrails
 	            end
 	        end
 
-	        { class: classes_array.join(" ") }    
+	        bemattributes = { class: classes_array.join(" ") }
+
+            if @custom_attrs
+                bemattributes.merge! @custom_attrs
+            end
+
+            bemattributes
 	    end
-	    alias :bemclass :render_class
+	    alias :bemattrs :render_bemattributes
 
 	    def render_empty
 	        "<div class=#{ bemclass }></div>".html_safe
