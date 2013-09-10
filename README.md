@@ -115,6 +115,11 @@ Block with mods without value:
 = b "test", mods: [:super, {color: "red"}], content: []
 ```
 
+Block with custom attributes for tag:
+```ruby
+= b "test", attrs: {src: "/img.png"}, content: []
+```
+
 Syntax is look like [bemhtml](http://ru.bem.info/articles/bemhtml-reference/).
 
 ### Templates
@@ -122,7 +127,7 @@ Syntax is look like [bemhtml](http://ru.bem.info/articles/bemhtml-reference/).
 Now templates exists for haml, sass, coffee and md technologies, but you will create your templates in
 lib/tasks/templates. For example, you can watch haml template:
 ```haml
-%div{ bemclass }
+%div{ bemattrs }
 	= bemcontent
 ```
 Bemclass and bemcontent is BEM helpers for rendering. 
@@ -138,12 +143,11 @@ If you want it, please watch [here](https://github.com/Vasfed/csso-rails).
 
 0. Incapsulate helpers methods and isolate them from project helpers.
 1. Custom tag for block or element.
-2. Add attrs for blocks and elements.
-3. Add custom classes for blocks and elements.
-4. Flags bem and js.
-5. Mix blocks and elements.
-6. Mods with restructure. Now you can't use mods with templates(haml, slim and etc.), but they generates.
-7. Bem exutable. Work with Thor is not convenient.
+2. Add custom classes for blocks and elements.
+3. Flags bem and js.
+4. Mix blocks and elements.
+5. Mods with restructure. Now you can't use mods with templates(haml, slim and etc.), but they generates.
+6. Bem exutable. Work with Thor is not convenient.
 
 ## Contributing
 
