@@ -19,7 +19,7 @@ BEM[:techs] = {
 
 # List of default techs, generating if -T is empty.
 BEM[:default] = {
-    haml: BEM[:techs][:haml],
+    slim: BEM[:techs][:slim],
     sass: BEM[:techs][:sass],
     coffee: BEM[:techs][:coffee],
     md: BEM[:techs][:md]
