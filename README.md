@@ -140,6 +140,11 @@ lib/tasks/templates. For example, you can watch haml template:
 - haml_tag bemtag, bemattrs
 	= bemcontent
 ```
+Or Slim template:
+```slim
+* bemtag, bemattrs
+	= bemcontent
+```
 Bemclass and bemcontent is BEM helpers for rendering. 
 
 ### You want more BEM?
