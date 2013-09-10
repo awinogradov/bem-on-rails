@@ -144,6 +144,8 @@ Read [here](http://habrahabr.ru/post/181880/) about it.
 
 If you want it, please watch [here](https://github.com/Vasfed/csso-rails).
 
+*__Stay BEMed!__*
+
 ## Tomorrow
 
 0. Incapsulate helpers methods and isolate them from project helpers.
