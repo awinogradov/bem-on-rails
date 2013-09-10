@@ -22,16 +22,16 @@ module Bemonrails
       end
 
       def add_initializer
-      	template "initializer.tt", File.join(Rails.root, "config", "initializers", "bem.rb")
+      	template "config/initializer.tt.rb", File.join(Rails.root, "config", "initializers", "bem.rb")
       end
 
       def install_bem_tasks
-      	template "bem.tt", File.join(Rails.root, "lib", "tasks", "bem.thor") 
+      	template "thor/bem.tt.rb", File.join(Rails.root, "lib", "tasks", "bem.thor")
       end
 
       def add_blocks_templates
       	%w(haml.tt coffee.tt md.tt sass.tt).each do |t|
-      		template t, File.join(Rails.root, "lib", "tasks", "templates", t) 
+      		template "techs/#{t}", File.join(Rails.root, "lib", "tasks", "templates", t)
       	end
       end
 
