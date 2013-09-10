@@ -102,12 +102,17 @@ Use them like configs, for require only. This involves using Sprockets.
 
 In your view you should write this:
 ```ruby
-= b "test", mods: {color: "red"}, content: [{ elem: "icon", elemMods: {size: "small"} }]        
+= b "test", mods: [{color: "red"}], content: [{ elem: "icon", elemMods: [{size: "small"}] }]
 ```
 
 If block in group:
 ```ruby
-= b "test", group: "name", mods: {color: "red"}, content: []        
+= b "test", group: "name", mods: [{color: "red"}], content: []
+```
+
+Block with mods without value:
+```ruby
+= b "test", mods: [:super, {color: "red"}], content: []
 ```
 
 Syntax is look like [bemhtml](http://ru.bem.info/articles/bemhtml-reference/).
@@ -132,14 +137,13 @@ If you want it, please watch [here](https://github.com/Vasfed/csso-rails).
 ## Tomorrow
 
 0. Incapsulate helpers methods and isolate them from project helpers.
-1. Rendering blocks in block.
-2. Custom tag for block or element.
-3. Add attrs for blocks and elements.
-4. Add custom classes for blocks and elements.
-5. Flags bem and js.
-6. Mix blocks and elements.
-7. Mods with restructure. Now you can't use mods with templates(haml, slim and etc.), but they generates.
-8. Bem exutable. Work with Thor is not convenient.
+1. Custom tag for block or element.
+2. Add attrs for blocks and elements.
+3. Add custom classes for blocks and elements.
+4. Flags bem and js.
+5. Mix blocks and elements.
+6. Mods with restructure. Now you can't use mods with templates(haml, slim and etc.), but they generates.
+7. Bem exutable. Work with Thor is not convenient.
 
 ## Contributing
 
