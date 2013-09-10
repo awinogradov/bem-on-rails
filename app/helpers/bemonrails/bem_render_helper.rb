@@ -39,14 +39,15 @@ module Bemonrails
 	            classes_array = [ block(@block_name) ]
 	            # Install mods
 	            if @block_mods
-	                @block_mods.each do |mod_name, mod_value|
+	                @block_mods.each do |mod|
 	                    # Generate mods classes
-	                    if mod_value
-	                        classes_array.push block(@block_name) + mod(mod_name.to_s) + mod(mod_name.to_s, mod_value)
-	                    else
-	                        classes_array.push block(@block_name) + mod(mod_name.to_s)
-	                    end
-
+                        if mod.kind_of? Hash
+                            mod.each do |mod_name, mod_value|
+                                classes_array.push block(@block_name) + mod(mod_name.to_s) + mod(mod_name.to_s, mod_value)
+                            end
+                        else
+                            classes_array.push block(@block_name) + mod(mod.to_s)
+                        end
 	                    # TODO: Find mod with restructure .haml, .erb or etc.
 	                end 
 	            end

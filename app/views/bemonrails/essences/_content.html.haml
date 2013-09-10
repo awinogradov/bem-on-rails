@@ -2,6 +2,8 @@
 	- @content.each do |essence|
 		- if essence.kind_of?(Hash) && essence[:elem]
 			= e essence[:elem], { content: essence[:content], mods: essence[:elemMods] }
+		- elsif essence.kind_of?(Hash) && essence[:block]
+			= b essence[:block], { content: essence[:content], mods: essence[:mods] }
 		- else
 			= essence
 - else
