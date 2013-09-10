@@ -3,6 +3,10 @@ module Bemonrails
 		
 		include Bemonrails::BemNames
 
+        def bemtag
+            @custom_tag ||= "div"
+        end
+
 		def render_block(name, builder={})
 	        unless name.blank?
 	            # Generate block paths
@@ -13,6 +17,7 @@ module Bemonrails
 	            @block_mods = builder[:mods]
                 @custom_attrs = builder[:attrs]
                 @custom_class = builder[:cls]
+                @custom_tag = builder[:tag]
 	            @content = builder[:content]
 	            # Render block in view  
 	            template_exists?(target) ? render(file: target) : bemempty
@@ -30,6 +35,7 @@ module Bemonrails
 	            @element_mods = builder[:elemMods]
                 @custom_attrs = builder[:attrs]
                 @custom_class = builder[:cls]
+                @custom_tag = builder[:tag]
 	            puts @element_mods
 	            @content = builder[:content]
 	            # Render element in block

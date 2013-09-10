@@ -1,2 +1,2 @@
-%div{ bemattrs }
+- haml_tag bemtag, bemattrs
 	= bemcontent

@@ -4,13 +4,15 @@
 			= e essence[:elem], { content: essence[:content],
 			                      mods: essence[:elemMods],
 			                      attrs: essence[:attrs],
-			                      cls: essence[:cls] }
+			                      cls: essence[:cls],
+			                      tag: essence[:tag] }
 
 		- elsif essence.kind_of?(Hash) && essence[:block]
 			= b essence[:block], { content: essence[:content],
 			                       mods: essence[:mods],
 			                       attrs: essence[:attrs],
-			                       cls: essence[:cls] }
+			                       cls: essence[:cls],
+			                       tag: essence[:tag] }
 
 		- else
 			= essence
