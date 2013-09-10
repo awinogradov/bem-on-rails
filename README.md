@@ -148,11 +148,10 @@ If you want it, please watch [here](https://github.com/Vasfed/csso-rails).
 
 0. Incapsulate helpers methods and isolate them from project helpers.
 1. Custom tag for block or element.
-2. Add custom classes for blocks and elements.
-3. Flags bem and js.
-4. Mix blocks and elements.
-5. Mods with restructure. Now you can't use mods with templates(haml, slim and etc.), but they generates.
-6. Bem exutable. Work with Thor is not convenient.
+2. Flags bem and js.
+3. Mix blocks and elements.
+4. Mods with restructure. Now you can't use mods with templates(haml, slim and etc.), but they generates.
+5. Bem exutable. Work with Thor is not convenient.
 
 ## Contributing
 
