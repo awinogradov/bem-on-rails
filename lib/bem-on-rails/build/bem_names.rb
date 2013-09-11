@@ -29,6 +29,10 @@ module Bemonrails
             File.join(path.compact)
         end
 
+        def path_to_block(path)
+            BEM[:blocks][:path] + path
+        end
+
         def generate_names(builder=options)
             names = {}
             # Generate names for block, his mods and they values
@@ -65,6 +69,16 @@ module Bemonrails
             end
 
             names
+        end
+
+        def essence
+            if options[:block] && !options[:element] && !options[:mod]
+                :block
+            elsif options[:element] && !options[:mod]
+                :element
+            elsif options[:mod]
+                :mod
+            end
         end
 
         def block(name=options[:block])

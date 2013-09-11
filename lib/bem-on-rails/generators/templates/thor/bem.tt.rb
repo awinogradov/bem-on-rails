@@ -3,6 +3,7 @@ require File.expand_path('config/environment.rb')
 class Bem < Thor
     include Thor::Actions
     include Bemonrails::BemNames
+    include Bemonrails::ConsoleMessages
 
     source_root File.expand_path('../templates', __FILE__)
 
@@ -72,11 +73,8 @@ class Bem < Thor
 
     protected
 
-    def essence_exist?(essence_dir, creating=true)
-        if File.directory?(File.join(BEM[:blocks][:path], essence_dir))
-            puts print_message("Essence with this name is already exists. Try 'thor help bem:list' or 'thor help bem:usage ", 'red') if creating
-            true
-        end
+    def essence_exist?(essence_dir)
+        File.directory?(File.join(BEM[:blocks][:path], essence_dir))
     end
 
     def create_essence(essence_options, path)
@@ -88,23 +86,21 @@ class Bem < Thor
         if options[:tech] # Maybe recive from command line
             template "#{options[:tech]}.tt", File.join(essence_options[:path], path, names[:name], names[:name] + BEM[:techs][options[:tech].to_sym])
         else
-            # You can customize this list of defaults. See on top of file.
-            BEM[:default].each do |tech, extension|
-                template "#{tech}.tt", File.join(essence_options[:path], path, names[:name], names[:name] + extension)
-            end
+            create_defaults(essence_options, path, names)
+        end
+    end
+
+    def create_defaults(essence_options, path, names)
+        BEM[:default].each do |tech, extension|
+            template "#{tech}.tt", File.join(essence_options[:path], path, names[:name], names[:name] + extension)
         end
     end
 
     def remove_essence(essence_options, path)
         names = generate_names
-
-        if options[:tech]
-            destination = File.join(essence_options[:path], path, names[:name], names[:name] + BEM[:techs][options[:tech].to_sym])
-            FileUtils.rm(destination)
-        else
-            destination = File.join(essence_options[:path], path, names[:name])
-            FileUtils.rm_rf(destination)
-        end
+        destination = File.join(essence_options[:path], path, names[:name])
+        destination = File.join(destination, names[:name] + BEM[:techs][options[:tech].to_sym]) if options[:tech]
+        FileUtils.rm_rf(destination)
 
         puts "\e[0;31m      remove\e[0m  " + destination.to_s.gsub(Rails.root.to_s + "/", "")
     end
@@ -114,9 +110,7 @@ class Bem < Thor
             asset = File.join(Rails.root, "app", "assets", type.to_s, "application" + tech[:ext])
             destination = [path, name, name + tech[:ext]].reject(&:empty?)
             line = "#{tech[:import]} #{File.join(destination)}#{tech[:postfix]}"
-            File.open(asset, "a") do |f|
-                f.write("\n" + line)
-            end
+            File.open(asset, "a") { |f| f.write("\n" + line) }
         end
     end
 
@@ -126,132 +120,73 @@ class Bem < Thor
             destination = [path, name, name + tech[:ext]].reject(&:empty?)
             line = "#{tech[:import]} #{File.join(destination)}#{tech[:postfix]}"
 
-            # Open temporary file
             tmp = Tempfile.new("temp")
-            # Write good lines to temporary file.
             open(asset, 'r').each do |l|
                 tmp << l unless l.chomp == line || l.empty?
             end
-            # Close tmp, or troubles ahead.
             tmp.close
-            # Temp to original.
+
             FileUtils.mv(tmp.path, asset)
         end
     end
 
     def search_usage_information(essence, path)
         BEM[:usage].each do |tech, extension|
-            file_destination = File.join(BEM[:blocks][:path] + path, essence, essence + extension)
-            if File.exist?(file_destination)
-                puts tech.to_s + ": " + file_destination
-                puts "BEM[:usage]:\t"
-                File.readlines(file_destination).each do |line|
-                    puts line
-                end
-            end
+            file_destination = File.join(path_to_block(path), essence, essence + extension)
+            read_usage(file_destination) if File.exist?(file_destination)
         end
+    end
+
+    def read_usage(target)
+        puts "#{ tech }: #{ target }"
+        puts "BEM[:usage]:\t"
+        File.readlines(target) { |line| puts line }
     end
 
     def print_blocks_list(essence="", path)
-        directory_destination = File.join(BEM[:blocks][:path] + path, essence)
-        puts directory_destination
-        print_message("BEM[:blocks]:\t", 'green')
-        Dir[directory_destination + "/*"].each do |name|
-            # Show only essences. No files. No groups.
-            # Essences have't ext.
-            # Get dir name.
-            name = name.split('/')[-1]
-            if name.split('.').size == 1
-                puts " - " + name
-            end
-        end
+        directory_destination = File.join(path_to_block(path), essence)
+        parse_directory(:blocks, 'green', directory_destination)
     end
 
-    def print_elements_list(essence="", path)
-        directory_destination = File.join(BEM[:blocks][:path] + path, essence, BEM[:elements][:dir])
-        print_message("BEM[:elements]:\t", 'purple')
-        Dir[directory_destination + "/*"].each do |name|
-            # Get dir name.
-            name = name.split('/')[-1]
-            puts " - " + name.split(BEM[:elements][:prefix])[1]
-        end
+    def print_elements_list(ess_name="", path)
+        directory_destination = File.join(path_to_block(path), ess_name, BEM[:elements][:dir])
+        parse_directory(:elements, 'purple', directory_destination)
     end
 
-    def print_mods_list(essence="", path)
-        directory_destination = File.join(BEM[:blocks][:path] + path, essence, BEM[:mods][:dir])
-        print_message("BEM[:mods]:\t", 'cyan')
-        Dir[directory_destination + "/*"].each do |name|
-            # Get dir name.
-            name = name.split('/')[-1]
-            puts " - " + name.split(BEM[:mods][:prefix])[1]
-        end
+    def print_mods_list(ess_name="", path)
+        directory_destination = File.join(path_to_block(path), ess_name, BEM[:mods][:dir])
+        parse_directory(:mods, 'cyan', directory_destination)
     end
 
-    def print_values_list(essence="", path)
-        directory_destination = File.join(BEM[:blocks][:path] + path, essence)
-        print_message("VALUES:\t", 'yellow')
-        Dir[directory_destination +  "/*"].each do |name|
-            # Get dir name.
-            name = name.split('/')[-1]
-            puts " - " + name.split(BEM[:mods][:prefix])[1]
-        end
+    def print_values_list(ess_name="", path)
+        directory_destination = File.join(path_to_block(path), ess_name)
+        parse_directory(:mods, 'yellow', directory_destination)
     end
 
-    def essence
-        if options[:block] && !options[:element] && !options[:mod]
-            :block
-        elsif options[:element] && !options[:mod]
-            :element
-        elsif options[:mod]
-            :mod
+    def parse_directory(directory, essence, color)
+        print_message("BEM[#{ essence }]:\t", color)
+        Dir[directory + "/*"].each do |name|
+            name = name.split('/')[-1]
+            puts " - " + name.split(BEM[essence][:prefix])[1]
         end
     end
 
     def manipulate_essence(action, ess, path)
-        if ess == :mod
-            ess_name = mod(options[:value] ? options[:value] : options[:mod])
-            destination = File.join(path, ess_name)
-        else
-            ess_name = send(ess)
-            destination = File.join(path, ess_name)
-        end
+        ess_name = send(ess)
+        ess_name = mod(options[:value] ? options[:value] : options[:mod]) if ess == :mod
+        destination = File.join(path, ess_name)
 
         case action
             when :create
-                unless essence_exist?(destination)
-                    create_essence(BEM[ess.to_s.pluralize.to_sym], path)
-                    update_assets(ess_name, path)
-                end
+                create_essence(BEM[ess.to_s.pluralize.to_sym], path)
+                update_assets(ess_name, path)
             when :remove
-                if essence_exist?(destination, false) # Don't show error
-                    remove_essence(BEM[ess.to_s.pluralize.to_sym], path)
-                    cut_assets(ess_name, path)
-                end
+                remove_essence(BEM[ess.to_s.pluralize.to_sym], path)
+                cut_assets(ess_name, path)
             when :usage
-                search_usage_information(ess_name, path) if essence_exist?(destination, false)
-            else
-                raise print_message("You should set params. Try 'thor help bem:#{action}' for more information", 'red')
+                search_usage_information(ess_name, path) if essence_exist?(destination)
+            else raise print_message("You should set params. Try 'thor help bem:#{action}' for more information", 'red')
         end
     end
 
-    def print_message(message, color)
-        check_argument_data_type(message, String)
-        check_argument_data_type(color, String)
-
-        color = case color
-                    when 'green' then "\e[0;32m"
-                    when 'red' then "\e[0;31m"
-                    when 'blue' then "\e[0;34m"
-                    when 'cyan' then "\e[0;36m"
-                    when 'purple' then "\e[0;35m"
-                    when 'yellow' then "\e[1;33m"
-                    else ''
-                end
-
-        puts "#{color + message} \e[0m"
-    end
-
-    def check_argument_data_type(argument, type)
-        raise print_message("#{argument} must be a #{type.to_s}", 'red') unless argument.kind_of? type
-    end
 end
