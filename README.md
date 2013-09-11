@@ -1,6 +1,6 @@
 [![Bem on Rails](http://habrastorage.org/storage3/551/97d/0c5/55197d0c503e312952195b2ae0e4c337.png)](https://github.com/verybigman/bem-on-rails)
 
-# BEM on Rails
+# BEM on Rails [![Code Climate](https://codeclimate.com/github/verybigman/bem-on-rails.png)](https://codeclimate.com/github/verybigman/bem-on-rails)
 
 Work with BEM methodology in Rails applications. BEM on Rails is ruby copy from bem-tools. 
 You can read about bem-tools [here](http://bem.info/tools/bem/) and BEM methodology [here](http://bem.info/method/).
