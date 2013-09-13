@@ -2,60 +2,60 @@ BEM = {}
 
 # List of known techs.
 BEM[:techs] = {
-    haml: ".html.haml",
-    slim: ".html.slim",
-    erb: "html.erb",
-    jade: ".jade",
-    sass: ".css.sass",
-    scss: ".css.scss",
-    less: ".css.less",
-    styl: ".css.styl",
-    css: ".css",
-    coffee: ".coffee",
-    js: ".js",
-    md: ".md",
-    wiki: ".wiki"
+  haml: ".html.haml",
+  slim: ".html.slim",
+  erb: "html.erb",
+  jade: ".jade",
+  sass: ".css.sass",
+  scss: ".css.scss",
+  less: ".css.less",
+  styl: ".css.styl",
+  css: ".css",
+  coffee: ".coffee",
+  js: ".js",
+  md: ".md",
+  wiki: ".wiki"
 }
 
 # List of default techs, generating if -T is empty.
 BEM[:default] = {
-    slim: BEM[:techs][:slim],
-    sass: BEM[:techs][:sass],
-    coffee: BEM[:techs][:coffee],
-    md: BEM[:techs][:md]
+  slim: BEM[:techs][:slim],
+  sass: BEM[:techs][:sass],
+  coffee: BEM[:techs][:coffee],
+  md: BEM[:techs][:md]
 }
 
 # Usage files variants.
 BEM[:usage] = {
-    md: BEM[:techs][:md],
-    wiki: BEM[:techs][:wiki]
+  md: BEM[:techs][:md],
+  wiki: BEM[:techs][:wiki]
 }
 
 # Default directories, try to customize.
 # Blocks directory in root of rails app.
 BEM[:blocks] = {
-    dir: "blocks",
-    path: Rails.root.join("blocks"),
-    prefix: "",
-    postfix: ""
+  dir: "blocks",
+  path: Rails.root.join("blocks"),
+  prefix: "",
+  postfix: ""
 }
 
 # Elements directory in every block directory.
 # Write 'dir: ""' for creating elements in root of block.
 BEM[:elements] = {
-    dir: "elements",
-    path: BEM[:blocks][:path], # This is individualy for every block
-    prefix: "__",
-    postfix: ""
+  dir: "elements",
+  path: BEM[:blocks][:path], # This is individualy for every block
+  prefix: "__",
+  postfix: ""
 }
 
 # Mods directory in every block directory.
 # Write 'dir: ""' for creating mods in root of block.
 BEM[:mods] = {
-    dir: "mods",
-    path: BEM[:blocks][:path], # This is individualy for every block or element
-    prefix: "_",
-    postfix: ""
+  dir: "mods",
+  path: BEM[:blocks][:path], # This is individualy for every block or element
+  prefix: "_",
+  postfix: ""
 }
 
 # [!] If you work with sass and you want to create blocks, elements and mods in sass,
@@ -75,16 +75,16 @@ BEM[:mods] = {
 # }
 
 BEM[:assets] = {
-    stylesheets:
-        {
-            ext: BEM[:techs][:sass],
-            import: '//= require'
-        },
-    javascripts:
-        {
-            ext: BEM[:techs][:js],
-            import: '//= require'
-        }
+  stylesheets:
+  {
+    ext: BEM[:techs][:sass],
+    import: '//= require'
+  },
+  javascripts:
+  {
+    ext: BEM[:techs][:js],
+    import: '//= require'
+  }
 }
 
 # You must use application files in

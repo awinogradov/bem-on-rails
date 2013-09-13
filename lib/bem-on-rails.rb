@@ -5,5 +5,4 @@ require "bem-on-rails/build/console_messages"
 require "bem-on-rails/generators/install_generator"
 
 module Bemonrails
-	
 end
