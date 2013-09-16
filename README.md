@@ -23,8 +23,7 @@ Then you should run install generator:
 
     $ rails g bemonrails:install
 
-This generator adds lines to application_controller.rb, application_helper.rb and creates Thor task with templates.
-You should run to watch your new instruments:
+This generator creates Thor task with templates. You should run to watch your new instruments:
     
     $ thor -T 
     
