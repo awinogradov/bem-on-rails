@@ -13,6 +13,7 @@ module Bemonrails
         target = File.join path, block(name), block(name)
         # Block details
         @block_name = name
+        @element_name = nil
         @block_mods = builder[:mods]
         @custom_attrs = builder[:attrs]
         @custom_class = builder[:cls]
