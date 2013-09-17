@@ -18,18 +18,10 @@ BEM[:techs] = {
 }
 
 # List of default techs, generating if -T is empty.
-BEM[:default] = {
-  slim: BEM[:techs][:slim],
-  sass: BEM[:techs][:sass],
-  coffee: BEM[:techs][:coffee],
-  md: BEM[:techs][:md]
-}
+BEM[:default] = [:haml, :sass, :coffee, :md]
 
 # Usage files variants.
-BEM[:usage] = {
-  md: BEM[:techs][:md],
-  wiki: BEM[:techs][:wiki]
-}
+BEM[:usage] = [:md, :wiki]
 
 # Default directories, try to customize.
 # Blocks directory in root of rails app.

@@ -14,8 +14,8 @@ module Bemonrails
       end
 
       def add_blocks_templates
-        %w(slim.tt haml.tt coffee.tt md.tt sass.tt).each do |t|
-          template "techs/#{t}", File.join(Rails.root, "lib", "tasks", "templates", t)
+        %w(haml.tt coffee.tt md.tt sass.tt).each do |t|
+          copy_file "techs/#{t}", File.join(Rails.root, "lib", "tasks", "templates", t)
         end
       end
 
