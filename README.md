@@ -27,8 +27,8 @@ This generator creates Thor task with templates. You should run to watch your ne
     
     $ thor -T 
     
-Also generator creates initializer bem.rb with BEM constant. You should restart server after install. 
-You can customize everythink!
+You should restart server after install. 
+You can customize everythink in initializers/bem.rb!
 
 ## Usage
 
@@ -143,7 +143,7 @@ Or Slim template:
 * bemtag, bemattrs
 	= bemcontent
 ```
-Bemclass and bemcontent is BEM helpers for rendering. 
+Bematag, bemattrs and bemcontent is BEM helpers for rendering. 
 
 ### You want more BEM?
 
