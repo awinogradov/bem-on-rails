@@ -135,15 +135,16 @@ Syntax is look like [bemhtml](http://ru.bem.info/articles/bemhtml-reference/).
 Now templates exists for haml, sass, coffee and md technologies, but you will create your templates in
 lib/tasks/templates. For example, you can watch haml template:
 ```haml
-- haml_tag bemtag, bemattrs
-	= bemcontent
+- haml_tag this[:tag], this[:attrs]
+	= content
 ```
 Or Slim template:
 ```slim
-* bemtag, bemattrs
-	= bemcontent
+* this[:tag], this[:attrs]
+	= content
 ```
-Bematag, bemattrs and bemcontent is BEM helpers for rendering. 
+This and content is BEM helpers for rendering. For access to default essence propeties use 'this' method.
+For access to custom essence properties use 'ctx' method.
 
 ### You want more BEM?
 
