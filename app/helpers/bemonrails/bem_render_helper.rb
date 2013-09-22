@@ -8,7 +8,7 @@ module Bemonrails
         target = File.join path, block(name), block(name)
         get_bemattributes_from builder
         set_names :block, name
-        then_generate_bemclass
+        update_bemattributes
         template_exists?(target) ? render(file: target) : empty
       end
     end
@@ -19,7 +19,7 @@ module Bemonrails
         target = File.join path, element(name), element(name)
         get_bemattributes_from builder
         set_names :element, name
-        then_generate_bemclass
+        update_bemattributes
         template_exists?(target) ? render(file: target) : empty
       end
     end
@@ -48,29 +48,43 @@ module Bemonrails
       end
     end
 
-    def then_generate_bemclass
-      if @this[:block] && !@this[:elem]
-        classes_array = [block(@this[:block])]
-        install_mods(@this[:mods], classes_array)
-      elsif @this[:elem] 
-        classes_array = [block(@this[:block]) + element(@this[:elem])]
-        install_mods(@this[:elemMods], classes_array)
-      end
+    def update_bemattributes
+      classes_array = []
+      generate_class(@this, classes_array)
+      install_mix(@this[:mix], classes_array)
       @this[:attrs].merge!({class: [classes_array, @this[:cls]].join(" ").strip!})
     end
 
-    def install_mods(mods, classes_array)
+    def install_mods(mods, classes_array, bl, el=false)
       if mods
-        el = @this[:elem] ? element(@this[:elem]) : ""
+        el = el ? element(el) : ""
         mods.each do |mod|
           if mod.kind_of? Hash
             mod.each do |mod_name, mod_value|
-              classes_array.push block(@this[:block]) + el + mod(mod_name.to_s) + mod(mod_name.to_s, mod_value)
+              classes_array.push(block(bl) + el + mod(mod_name.to_s) + mod(mod_name.to_s, mod_value))
             end
           else
-            classes_array.push block(@this[:block]) + el + mod(mod.to_s)
+            classes_array.push(block(bl) + el + mod(mod.to_s))
           end  
         end 
+      end
+    end
+
+    def install_mix(mixs, classes_array)
+      if mixs
+        mixs.each do |mix|
+          generate_class(mix, classes_array) 
+        end   
+      end
+    end
+
+    def generate_class(essence, classes_array)
+      if essence[:block] && !essence[:elem]
+        classes_array.push(block(essence[:block]))
+        install_mods(essence[:mods], classes_array, essence[:block])
+      elsif essence[:elem] 
+        classes_array.push(block(essence[:block]) + element(essence[:elem]))
+        install_mods(essence[:elemMods], classes_array, essence[:block], essence[:elem])
       end
     end
 
