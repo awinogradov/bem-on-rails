@@ -2,107 +2,91 @@ module Bemonrails
   module BemRenderHelper
     include Bemonrails::BemNames
 
-    def bemtag
-      @custom_tag ||= "div"
-    end
-
-    def render_block(name, builder={})
+    def b(name, builder={})
       unless name.blank?
-        # Generate block paths
         path = File.join BEM[:blocks][:dir], build_path_for(:block, builder)
         target = File.join path, block(name), block(name)
-        # Block details
-        @block_name = name
-        @element_name = nil
-        @block_mods = builder[:mods]
-        @custom_attrs = builder[:attrs]
-        @custom_class = builder[:cls]
-        @custom_tag = builder[:tag]
-        @content = builder[:content]
-        # Render block in view  
-        template_exists?(target) ? render(file: target) : bemempty
+        get_bemattributes_from builder
+        set_names :block, name
+        then_generate_bemclass
+        template_exists?(target) ? render(file: target) : empty
       end
     end
-    alias :b :render_block
 
-    def render_element(name, builder={})
+    def e(name, builder={})
       unless name.blank?
-        # Generate element paths
         path = File.join build_path_for(:element, builder)
         target = File.join path, element(name), element(name)
-        # Element details
-        @element_name = name
-        @element_mods = builder[:elemMods]
-        @custom_attrs = builder[:attrs]
-        @custom_class = builder[:cls]
-        @custom_tag = builder[:tag]
-        puts @element_mods
-        @content = builder[:content]
-        # Render element in block
-        template_exists?(target) ? render(file: target) : bemempty
+        get_bemattributes_from builder
+        set_names :element, name
+        then_generate_bemclass
+        template_exists?(target) ? render(file: target) : empty
       end
     end
-    alias :e :render_element
 
-    def render_bemattributes
-      if @block_name && !@element_name 
-        classes_array = [ block(@block_name) ]
-        # Install mods
-        if @block_mods
-          @block_mods.each do |mod|
-            # Generate mods classes
+    def get_bemattributes_from(builder={})
+      @this = {}
+      BEM[:attrs].each do |mod|
+        if builder[mod]
+          @this[mod] = builder[mod] 
+          builder = builder.except(mod)
+        end
+      end
+      @this[:ctx] = builder
+      # Set defult attrs, if user not set them.
+      @this[:tag] ||= :div
+      @this[:attrs] ||= {}
+    end
+
+    def set_names(essence, name)
+      case essence
+      when :block
+        @this[:block] = @block_buffer = name
+      when :element
+        @this[:block] = @block_buffer
+        @this[:elem] = name
+      end
+    end
+
+    def then_generate_bemclass
+      if @this[:block] && !@this[:elem]
+        classes_array = [block(@this[:block])]
+        if @this[:mods]
+          @this[:mods].each do |mod|
             if mod.kind_of? Hash
               mod.each do |mod_name, mod_value|
-                classes_array.push block(@block_name) + mod(mod_name.to_s) + mod(mod_name.to_s, mod_value)
+                classes_array.push block(@this[:block]) + mod(mod_name.to_s) + mod(mod_name.to_s, mod_value)
               end
             else
-              classes_array.push block(@block_name) + mod(mod.to_s)
+              classes_array.push block(@this[:block]) + mod(mod.to_s)
             end
-            # TODO: Find mod with restructure .haml, .erb or etc.
           end 
         end
-      elsif @element_name 
-        classes_array = [ block(@block_name) + element(@element_name) ]
-        # Install mods
-        if @element_mods
-          @element_mods.each do |mod_name, mod_value|
-            # Generate mods classes
+      elsif @this[:elem] 
+        classes_array = [block(@this[:block]) + element(@this[:elem])]
+        if @this[:elemMods]
+          @this[:elemMods].each do |mod_name, mod_value|
             if mod_value
-              classes_array.push block(@block_name) + element(@element_name) + mod(mod_name.to_s) + mod(mod_name.to_s, mod_value)
+              classes_array.push block(@this[:block]) + element(@this[:elem]) + mod(mod_name.to_s) + mod(mod_name.to_s, mod_value)
             else
-              classes_array.push block(@block_name) + element(@element_name) + mod(mod_name.to_s)
+              classes_array.push block(@this[:block]) + element(@this[:elem]) + mod(mod_name.to_s)
             end
           end 
         end
       end
-
-      bemclass = classes_array.join(" ")
-
-      # If custom class exist
-      if @custom_class
-        bemclass = [bemclass, @custom_class].join(" ")
-      end
-
-      # String for tag attributes
-      bemattributes = { class: bemclass }
-
-      # If custom attributes exist
-      if @custom_attrs
-        bemattributes.merge! @custom_attrs
-      end
-
-      bemattributes
+      @this[:attrs].merge!({class: [classes_array, @this[:cls]].join(" ").strip!})
     end
-    alias :bemattrs :render_bemattributes
 
-    def render_empty
-      "<div class=#{ bemclass }></div>".html_safe
+    def empty
+      "<div class=#{ @this[:attrs][:class] }></div>".html_safe
     end
-    alias :bemempty :render_empty
 
-    def render_content
+    def this
+      @this
+    end
+
+    def content
       render "bemonrails/essences/content"
     end
-    alias :bemcontent :render_content
   end
 end

@@ -1,4 +1,7 @@
 BEM = {}
+
+BEM[:attrs] = [:block, :elem, :mods, :elemMods, :bem, :js, :jsAttr, :cls, :tag, :mix, :content]
+
 # List of known techs.
 BEM[:techs] = {
   haml: ".html.haml",

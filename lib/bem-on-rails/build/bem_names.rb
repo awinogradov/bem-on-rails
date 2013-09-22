@@ -86,7 +86,7 @@ module Bemonrails
     end
 
     def element_directory
-      block_name = @block_name ? @block_name : options[:block]
+      block_name = @this[:block] ? @this[:block] : options[:block]
       File.join(block(block_name), BEM[:elements][:dir])
     end
 
