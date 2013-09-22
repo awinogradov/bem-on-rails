@@ -1,2 +1,2 @@
-* bemtag, bemattrs
-  = bemcontent
+* this[:tag], this[:attrs]
+  = content

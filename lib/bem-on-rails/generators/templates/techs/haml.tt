@@ -1,2 +1,2 @@
-- haml_tag bemtag, bemattrs do
-    = bemcontent
+- haml_tag this[:tag], this[:attrs] do
+    = content

@@ -158,10 +158,11 @@ If you want it, please watch [here](https://github.com/Vasfed/csso-rails).
 ## Tomorrow
 
 0. Incapsulate helpers methods and isolate them from project helpers.
-1. Flags bem and js.
-2. Mix blocks and elements.
-3. Mods with restructure. Now you can't use mods with templates(haml, slim and etc.), but they generates.
-4. Bem exutable. Work with Thor is not convenient.
+1. Flag bem.
+2. i-bem.js for html.
+3. deps.js
+4. Mods with restructure. Now you can't use mods with templates(haml, slim and etc.), but they generates.
+5. Bem exutable. Work with Thor is not convenient.
 
 ## Contributing
 

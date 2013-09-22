@@ -14,3 +14,9 @@
 * extract helpers includes to railtie
 * extract views folder includes to railtie
 * update install generator
+
+## v0.0.4
+
+* more refactoring
+* add mix functionality
+* walking to clean code
