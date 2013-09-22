@@ -51,30 +51,27 @@ module Bemonrails
     def then_generate_bemclass
       if @this[:block] && !@this[:elem]
         classes_array = [block(@this[:block])]
-        if @this[:mods]
-          @this[:mods].each do |mod|
-            if mod.kind_of? Hash
-              mod.each do |mod_name, mod_value|
-                classes_array.push block(@this[:block]) + mod(mod_name.to_s) + mod(mod_name.to_s, mod_value)
-              end
-            else
-              classes_array.push block(@this[:block]) + mod(mod.to_s)
-            end
-          end 
-        end
+        install_mods(@this[:mods], classes_array)
       elsif @this[:elem] 
         classes_array = [block(@this[:block]) + element(@this[:elem])]
-        if @this[:elemMods]
-          @this[:elemMods].each do |mod_name, mod_value|
-            if mod_value
-              classes_array.push block(@this[:block]) + element(@this[:elem]) + mod(mod_name.to_s) + mod(mod_name.to_s, mod_value)
-            else
-              classes_array.push block(@this[:block]) + element(@this[:elem]) + mod(mod_name.to_s)
-            end
-          end 
-        end
+        install_mods(@this[:elemMods], classes_array)
       end
       @this[:attrs].merge!({class: [classes_array, @this[:cls]].join(" ").strip!})
+    end
+
+    def install_mods(mods, classes_array)
+      if mods
+        el = @this[:elem] ? element(@this[:elem]) : ""
+        mods.each do |mod|
+          if mod.kind_of? Hash
+            mod.each do |mod_name, mod_value|
+              classes_array.push block(@this[:block]) + el + mod(mod_name.to_s) + mod(mod_name.to_s, mod_value)
+            end
+          else
+            classes_array.push block(@this[:block]) + el + mod(mod.to_s)
+          end  
+        end 
+      end
     end
 
     def empty
