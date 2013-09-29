@@ -33,9 +33,9 @@ module Bemonrails
         end
       end
       @this[:ctx] = builder
-      # Set defult attrs, if user not set them.
-      @this[:tag] ||= :div
+      @this[:bem] ||= true
       @this[:attrs] ||= {}
+      @this[:tag] ||= :div
     end
 
     def set_names(essence, name)
@@ -50,8 +50,12 @@ module Bemonrails
 
     def update_bemattributes
       classes_array = []
-      generate_class(@this, classes_array)
-      install_mix(@this[:mix], classes_array)
+      if @this[:bem] == true
+        generate_class(@this, classes_array)
+        install_mix(@this[:mix], classes_array)
+      else
+        classes_array.push(@this[:elem] ? @this[:elem] : @this[:block])
+      end
       @this[:attrs].merge!({class: [classes_array, @this[:cls]].join(" ").strip!})
     end
 
