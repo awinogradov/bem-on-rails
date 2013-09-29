@@ -70,25 +70,32 @@ class Bem < Thor
     method_option :add, type: :boolean, aliases: "-a", desc: "Add new level"
     method_option :git, type: :string, aliases: "-g", desc: "From git repository"
     method_option :dir, type: :string, aliases: "-d", desc: "From local directory"
-    method_option :new, type: :string, aliases: "-n", desc: "From local directory"
+    method_option :new, type: :string, aliases: "-n", desc: "Create new level"
     def levels
         if options[:add]
             level_name = ""
-            directory = ""
+            level = ""
             if options[:git]
                 level_name = options[:git].split("/").last.gsub(".git", "")
-                directory = Rails.root.join(BEM[:root], level_name)
+                level = Rails.root.join BEM[:root], level_name
                 print_message("Cloning blocks into new level: #{level_name}...", "green")
-                `git clone #{options[:git]} #{directory}`
+                `git clone #{options[:git]} #{level}`
+                test_level(level) ? level_added : level_error
+                level_has_assets?(level) ? update_assets_with_level(level_name) : make_level_assets_path(level)
             elsif options[:dir]
                 level_name = options[:git].split("/").last
-                directory = Rails.root.join(BEM[:root], level_name)
+                level = Rails.root.join BEM[:root], level_name
                 print_message("Copying blocks into new level: #{level_name}...", "green")
-                `cp -R #{options[:dir]} #{directory}`
+                `cp -R #{options[:dir]} #{level}`
+                test_level(level) ? level_added : level_error
+                level_has_assets?(level) ? update_assets_with_level(level_name) : make_level_assets_path(level)
+            elsif options[:new]
+                level_name = options[:new]
+                level = Rails.root.join BEM[:root], level_name
+                make_level_assets_path level
+                update_assets_with_level level_name
+                test_level(level) ? level_added : level_error
             end       
-            
-            test_level(directory) ? level_added : level_error
-            level_has_assets?(directory) ? update_assets_with_level(level_name) : make_level_assets_path(directory)
         end    
     end
 
@@ -118,21 +125,18 @@ class Bem < Thor
         BEM[:assets].each do |type, tech|
             asset = File.join(Rails.root, "app", "assets", type.to_s, "application" + tech[:ext])
             destination = [level, level_assets_path, type.to_s, "level" + tech[:ext]]
-            line = "#{tech[:import]} #{File.join(destination)}#{tech[:postfix]}"
-            File.open(asset, "a") { |f| f.write("\n" + line) }
+            append_file asset, "\n#{tech[:import]} #{File.join(destination)}#{tech[:postfix]}"
         end
     end
 
     def make_level_assets_path(level)
        BEM[:assets].each do |type, tech|
-            asset = File.join(level, level_assets_path, type.to_s)
-            FileUtils.mkdir_p asset
-            FileUtils.touch File.join(asset, "level" + tech[:ext])
+            create_file File.join level, level_assets_path, type.to_s, "level" + tech[:ext]
         end 
     end
 
     def essence_exist?(essence_dir)
-        File.directory?(File.join(BEM[:blocks][:path], essence_dir))
+        File.directory? File.join BEM[:blocks][:path], essence_dir
     end
 
     def create_essence(essence_options, path)
@@ -158,17 +162,14 @@ class Bem < Thor
         names = generate_names
         destination = File.join(essence_options[:path], path, names[:name])
         destination = File.join(destination, names[:name] + BEM[:techs][options[:tech].to_sym]) if options[:tech]
-        FileUtils.rm_rf(destination)
-
-        puts "\e[0;31m      remove\e[0m  " + destination.to_s.gsub(Rails.root.to_s + "/", "")
+        remove_dir destination
     end
 
     def update_assets(name, path)
         BEM[:assets].each do |type, tech|
             asset = File.join(Rails.root, "app", "assets", type.to_s, "application" + tech[:ext])
             destination = [path, name, name + tech[:ext]].reject(&:empty?)
-            line = "#{tech[:import]} #{File.join(destination)}#{tech[:postfix]}"
-            File.open(asset, "a") { |f| f.write("\n" + line) }
+            append_file asset, "\n#{tech[:import]} #{File.join(destination)}#{tech[:postfix]}"
         end
     end
 
