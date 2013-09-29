@@ -3,7 +3,7 @@ module Bemonrails
     # Directories paths.
     def build_path_for(essence, builder=options)
       # I think all block can be in groups
-      path = [builder[:group]]
+      path = [builder[:level]]
       case essence
       when :mod
         # This is for mods with value
@@ -86,7 +86,7 @@ module Bemonrails
     end
 
     def element_directory
-      block_name = @this[:block] ? @this[:block] : options[:block]
+      block_name = @this ? @this[:block] : options[:block]
       File.join(block(block_name), BEM[:elements][:dir])
     end
 

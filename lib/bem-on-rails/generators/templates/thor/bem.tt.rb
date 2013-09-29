@@ -13,7 +13,7 @@ class Bem < Thor
     method_option :mod, type: :string, aliases: "-m", desc: "Create modificator for block or element."
     method_option :value, type: :string, aliases: "-v", desc: "Value for modificator."
     method_option :tech, type: :string, aliases: "-T", desc: "Create essence in spec tech."
-    method_option :group, type: :string, aliases: "-l", desc: "Create essence in group. Work for blocks only!"
+    method_option :level, type: :string, aliases: "-l", desc: "Create essence in level. Work for blocks only!"
     method_option :force, type: :boolean, desc: "Force existing block, element or mod files."
     def create
         path = build_path_for(essence)
@@ -27,7 +27,7 @@ class Bem < Thor
     method_option :mod, type: :string, aliases: "-m", desc: "Remove modificator for block or element."
     method_option :value, type: :string, aliases: "-v", desc: "Value for modificator."
     method_option :tech, type: :string, aliases: "-T", desc: "Remove essence in spec tech."
-    method_option :group, type: :string, aliases: "-l", desc: "Remove essence in group. Work for blocks only!"
+    method_option :level, type: :string, aliases: "-l", desc: "Remove essence in level. Work for blocks only!"
     def remove
         path = build_path_for(essence)
         manipulate_essence(:remove, essence, path)
@@ -39,18 +39,18 @@ class Bem < Thor
     method_option :element, type: :string, aliases: "-e", desc: "Element usage"
     method_option :mod, type: :string, aliases: "-m", desc: "Mod usage."
     method_option :value, type: :string, aliases: "-v", desc: "Mod value usage."
-    method_option :group, type: :string, aliases: "-l", desc: "Search essence in group."
+    method_option :level, type: :string, aliases: "-l", desc: "Search essence in level."
     def usage
         path = build_path_for(essence)
         manipulate_essence(:usage, essence, path)
     end
 
 
-    desc 'list', 'See list of group, block elements, mods and etc.'
+    desc 'list', 'See list of level, block elements, mods and etc.'
     method_option :block, type: :string, aliases: "-b", desc: "All block elements, mods and mods values"
     method_option :element, type: :string, aliases: "-e", desc: "All element mods and mods values"
     method_option :mod, type: :string, aliases: "-m", desc: "All mod values."
-    method_option :group, type: :string, aliases: "-l", desc: "All blocks in group."
+    method_option :level, type: :string, aliases: "-l", desc: "All blocks in level."
     def list
         path = essence ? build_path_for(essence) : build_path_for(:block)
         case essence
