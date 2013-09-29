@@ -29,8 +29,8 @@ module Bemonrails
       File.join(path.compact)
     end
 
-    def path_to_block(path, level=BEM[:level])
-      File.join Rails.root.join(BEM[:lib], level + path)
+    def path_to_block(path, level="")
+      File.join Rails.root.join(BEM[:root], level + path)
     end
 
     def generate_names(builder=options)

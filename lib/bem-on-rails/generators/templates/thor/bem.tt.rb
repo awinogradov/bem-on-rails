@@ -66,6 +66,27 @@ class Bem < Thor
         end
     end
 
+    desc 'level', 'Manipulating with levels'
+    method_option :add, type: :boolean, default: true, aliases: "-a", desc: "Add new level"
+    method_option :git, type: :string, aliases: "-g", desc: "From git repository"
+    def level
+        if options[:add]
+            if options[:git]
+                level_name = options[:git].split("/").last.gsub(".git", "")
+                directory = Rails.root.join(BEM[:root], level_name)
+                print_message("Cloning blocks into new level: #{level_name}...", "green")
+                
+                `git clone #{options[:git]} #{directory}`
+                
+                if File.directory?(directory) 
+                    print_message("New level added successfully! Change BEM[:levels] in bem.rb for available levels.", "green")
+                else
+                    print_message("Error! We have a trouble with connection to repository. Please, try again.", "red")
+                end
+            end       
+        end    
+    end
+
     protected
 
     def essence_exist?(essence_dir)
@@ -183,5 +204,4 @@ class Bem < Thor
             else raise print_message("You should set params. Try 'thor help bem:#{action}' for more information", 'red')
         end
     end
-
 end

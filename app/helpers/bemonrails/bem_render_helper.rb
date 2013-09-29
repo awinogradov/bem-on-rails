@@ -4,7 +4,7 @@ module Bemonrails
 
     def b(name, builder={})
       unless name.blank?
-        path = File.join BEM[:lib], build_path_for(:block, builder)
+        path = File.join build_path_for(:block, builder)
         target = File.join path, block(name), block(name)
         get_bemattributes_from builder
         set_names :block, name

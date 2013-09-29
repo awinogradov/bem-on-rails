@@ -1,10 +1,11 @@
 BEM = {}
 
-BEM[:lib] = "blocks"
+BEM[:root] = "bem"
 BEM[:attrs] = [:block, :elem, :mods, :elemMods, :bem, :js, :jsAttr, :cls, :tag, :mix, :content, :attrs]
+BEM[:levels] = []
 
-BEM[:parents] = {}
-BEM[:level] = Rails.application.class.to_s.split("::").first.underscore.split('_').map(&:downcase).join('-')
+BEM[:app] = Rails.application.class.to_s.split("::").first.underscore.split('_').map(&:downcase).join('-')
+BEM[:levels].push({ name: BEM[:app] })
 
 # List of known techs.
 BEM[:techs] = {
@@ -76,4 +77,4 @@ BEM[:assets] = {
 # You must use application files in
 # assets as a configs, don't write code in them.
 # This is need to sprokets includes.
-Rails.application.config.assets.paths << BEM[:lib]
+Rails.application.config.assets.paths << BEM[:root]

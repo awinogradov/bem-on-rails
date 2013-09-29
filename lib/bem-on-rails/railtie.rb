@@ -9,7 +9,8 @@ module Bemonrails
         end
 
         ActiveSupport.on_load :action_controller do
-            before_filter { prepend_view_path(BEM[:lib]) }
+            include Bemonrails::Levels
+            before_filter :parse_bem_levels
         end
     end
 
