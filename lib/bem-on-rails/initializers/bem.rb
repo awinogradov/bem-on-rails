@@ -1,6 +1,6 @@
 BEM = {}
 
-BEM[:attrs] = [:block, :elem, :mods, :elemMods, :bem, :js, :jsAttr, :cls, :tag, :mix, :content]
+BEM[:attrs] = [:block, :elem, :mods, :elemMods, :bem, :js, :jsAttr, :cls, :tag, :mix, :content, :attrs]
 
 # List of known techs.
 BEM[:techs] = {
