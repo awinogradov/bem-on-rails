@@ -2,8 +2,8 @@ module Bemonrails
   module BemNames
     # Directories paths.
     def build_path_for(essence, builder=options)
-      # I think all block can be in groups
-      path = [builder[:level]]
+      current_level = builder[:level] ? builder[:level] : BEM[:level]
+      path = [current_level]
       case essence
       when :mod
         # This is for mods with value
@@ -29,8 +29,8 @@ module Bemonrails
       File.join(path.compact)
     end
 
-    def path_to_block(path)
-      BEM[:blocks][:path] + path
+    def path_to_block(path, level=BEM[:level])
+      File.join Rails.root.join(BEM[:lib], level + path)
     end
 
     def generate_names(builder=options)
@@ -51,7 +51,7 @@ module Bemonrails
         end
       end
 
-      # Generate names for elements, his mods and they values
+      # Generate names for elements, they mods and they values
       if builder[:element]
 
         names[:name] = element

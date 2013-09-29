@@ -1,6 +1,10 @@
 BEM = {}
 
+BEM[:lib] = "blocks"
 BEM[:attrs] = [:block, :elem, :mods, :elemMods, :bem, :js, :jsAttr, :cls, :tag, :mix, :content, :attrs]
+
+BEM[:parents] = {}
+BEM[:level] = Rails.application.class.to_s.split("::").first.underscore.split('_').map(&:downcase).join('-')
 
 # List of known techs.
 BEM[:techs] = {
@@ -25,8 +29,6 @@ BEM[:usage] = [:md, :wiki]
 # Default directories, try to customize.
 # Blocks directory in root of rails app.
 BEM[:blocks] = {
-  dir: "blocks",
-  path: Rails.root.join("blocks"),
   prefix: "",
   postfix: ""
 }
@@ -34,7 +36,6 @@ BEM[:blocks] = {
 # Write 'dir: ""' for creating elements in root of block.
 BEM[:elements] = {
   dir: "elements",
-  path: BEM[:blocks][:path], # This is individualy for every block
   prefix: "__",
   postfix: ""
 }
@@ -42,7 +43,6 @@ BEM[:elements] = {
 # Write 'dir: ""' for creating mods in root of block.
 BEM[:mods] = {
   dir: "mods",
-  path: BEM[:blocks][:path], # This is individualy for every block or element
   prefix: "_",
   postfix: ""
 }
@@ -76,4 +76,4 @@ BEM[:assets] = {
 # You must use application files in
 # assets as a configs, don't write code in them.
 # This is need to sprokets includes.
-Rails.application.config.assets.paths << BEM[:blocks][:dir]
+Rails.application.config.assets.paths << BEM[:lib]
