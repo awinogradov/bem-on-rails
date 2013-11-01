@@ -1,3 +1,4 @@
+# Work in progress. Be stable at 5.11.2013
 [![Bem on Rails](http://habrastorage.org/storage3/551/97d/0c5/55197d0c503e312952195b2ae0e4c337.png)](https://github.com/verybigman/bem-on-rails)
 
 # BEM on Rails [![Code Climate](https://codeclimate.com/github/verybigman/bem-on-rails.png)](https://codeclimate.com/github/verybigman/bem-on-rails)
