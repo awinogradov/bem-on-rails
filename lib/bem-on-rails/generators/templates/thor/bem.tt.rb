@@ -132,6 +132,7 @@ class Bem < Thor
         BEM[:assets].each do |type, tech|
             asset = File.join(Rails.root, "app", "assets", type.to_s, "application" + tech[:ext])
             destination = [level, level_assets_path, type.to_s, "level" + tech[:ext]]  
+            create_file asset unless File.exist?(asset)       
             append_file asset, "\n#{ tech[:import] } #{ File.join(destination) }#{ tech[:postfix] }"
         end
     end
