@@ -1,9 +1,9 @@
 module Bemonrails
   module BemNames
     # Directories paths.
-    def build_path_for(essence, builder=options)
+    def build_path_for(essence, builder=options, include_level=true)
       current_level = builder[:level] ? builder[:level] : BEM[:level]
-      path = [current_level]
+      path = include_level ? [current_level] : []
       case essence
       when :mod
         # This is for mods with value
