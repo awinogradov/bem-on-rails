@@ -2,10 +2,10 @@
 # BEM[:techs][:my_tech] = ".ext"
 
 # List of default techs, generating if -T is empty.
-# BEM[:default] << :my_tech
+# BEM[:default].push(:my_tech)
 
 # Usage files variants. File for Readme about essences.
-# BEM[:usage] << :my_tech
+# BEM[:usage].push(:my_tech)
 
 # Default directories, try to customize.
 # Blocks directory in root of rails app.
