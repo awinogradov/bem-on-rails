@@ -20,3 +20,8 @@
 * more refactoring
 * add mix functionality
 * walking to clean code
+
+## v0.0.5
+
+* work with levels
+* errors fixes

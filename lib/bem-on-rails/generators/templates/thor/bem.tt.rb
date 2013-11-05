@@ -66,10 +66,85 @@ class Bem < Thor
         end
     end
 
+    desc 'levels', 'Manipulating with levels'
+    method_option :add, type: :boolean, aliases: "-a", desc: "Add new level"
+    method_option :git, type: :string, aliases: "-g", desc: "From git repository"
+    method_option :dir, type: :string, aliases: "-d", desc: "From local directory"
+    method_option :new, type: :string, aliases: "-n", desc: "Create new level"
+    method_option :default, type: :string, desc: "Create default level tree"
+    def levels
+        if options[:add]
+            level_name = ""
+            level = ""
+            if options[:git]
+                level_name = options[:git].split("/").last.gsub(".git", "")
+                level = Rails.root.join BEM[:root], level_name
+                print_message("Cloning blocks into new level: #{ level_name }...", "green")
+                `git clone #{ options[:git] } #{ level }`
+                test_level(level) ? level_added : level_error
+                level_has_assets?(level) ? update_assets_with_level(level_name) : make_level_assets_path(level)
+            elsif options[:dir]
+                level_name = options[:git].split("/").last
+                level = Rails.root.join BEM[:root], level_name
+                print_message("Copying blocks into new level: #{ level_name }...", "green")
+                `cp -R #{ options[:dir] } #{ level }`
+                test_level(level) ? level_added : level_error
+                level_has_assets?(level) ? update_assets_with_level(level_name) : make_level_assets_path(level)
+            elsif options[:new]
+                level_name = options[:new]
+                level = Rails.root.join BEM[:root], level_name
+                make_level_assets_path level
+                update_assets_with_level level_name
+                test_level(level) ? level_added : level_error
+            elsif options[:default]
+                level_name = BEM[:app]
+                level = Rails.root.join BEM[:root], level_name
+                make_level_assets_path level
+                update_assets_with_level level_name
+                test_level(level) ? level_added : level_error 
+            end       
+        end    
+    end
+
     protected
 
+    def test_level(level)
+        File.directory? level
+    end
+
+    def level_added
+        print_message("New level added successfully! Change BEM[:levels] in bem.rb for available levels.", "green")            
+    end
+
+    def level_error
+        print_message("Error! We have a trouble with connection to repository. Please, try again.", "red")
+    end
+
+    def level_assets_path
+        File.join(".bem", "assets")
+    end
+
+    def level_has_assets?(level)
+        File.directory? File.join level, level_assets_path
+    end
+
+    def update_assets_with_level(level)
+        BEM[:assets].each do |type, tech|
+            asset = File.join(Rails.root, "app", "assets", type.to_s, "application" + tech[:ext])
+            destination = [level, level_assets_path, type.to_s, "level" + tech[:ext]]  
+            create_file asset unless File.exist?(asset)       
+            append_file asset, "\n#{ tech[:import] } #{ File.join(destination) }#{ tech[:postfix] }"
+        end
+    end
+
+    def make_level_assets_path(level)
+       BEM[:assets].each do |type, tech|
+            create_file File.join level, level_assets_path, type.to_s, "level" + tech[:ext]
+        end 
+    end
+
     def essence_exist?(essence_dir)
-        File.directory?(File.join(BEM[:blocks][:path], essence_dir))
+        File.directory? File.join BEM[:blocks][:path], essence_dir
     end
 
     def create_essence(essence_options, path)
@@ -79,7 +154,7 @@ class Bem < Thor
         # directory. Watch existing templates for example.
         # What is .tt? It is custom extension for finding templates in other files.
         if options[:tech] # Maybe recive from command line
-            template "#{options[:tech]}.tt", File.join(essence_options[:path], path, names[:name], names[:name] + BEM[:techs][options[:tech].to_sym])
+            template "#{ options[:tech] }.tt", File.join(essence_options[:dir], path, names[:name], names[:name] + BEM[:techs][options[:tech].to_sym])
         else
             create_defaults(essence_options, path, names)
         end
@@ -87,33 +162,37 @@ class Bem < Thor
 
     def create_defaults(essence_options, path, names)
         BEM[:default].each do |tech|
-            template "#{tech}.tt", File.join(essence_options[:path], path, names[:name], names[:name] + BEM[:techs][tech])
+            template "#{ tech }.tt", File.join(essence_options[:dir], path, names[:name], names[:name] + BEM[:techs][tech])
         end
     end
 
     def remove_essence(essence_options, path)
         names = generate_names
-        destination = File.join(essence_options[:path], path, names[:name])
+        destination = File.join(essence_options[:dir], path, names[:name])
         destination = File.join(destination, names[:name] + BEM[:techs][options[:tech].to_sym]) if options[:tech]
-        FileUtils.rm_rf(destination)
-
-        puts "\e[0;31m      remove\e[0m  " + destination.to_s.gsub(Rails.root.to_s + "/", "")
+        remove_dir destination
     end
 
     def update_assets(name, path)
+        level = BEM[:level]
+        level ||= options[:level]  
         BEM[:assets].each do |type, tech|
-            asset = File.join(Rails.root, "app", "assets", type.to_s, "application" + tech[:ext])
-            destination = [path, name, name + tech[:ext]].reject(&:empty?)
-            line = "#{tech[:import]} #{File.join(destination)}#{tech[:postfix]}"
-            File.open(asset, "a") { |f| f.write("\n" + line) }
+            asset = File.join(Rails.root, BEM[:root], level, level_assets_path, type.to_s, "level" + tech[:ext])
+            # BEM[:root] > level > .bem > assets
+            # 4 ../
+            destination = ["../../../../", path, name, name + tech[:ext]].reject(&:empty?)
+            create_file asset unless File.exist?(asset)              
+            append_file asset, "\n#{ tech[:import] } #{ File.join(destination) }#{ tech[:postfix] }"
         end
     end
 
     def cut_assets(name, path)
+        level = BEM[:level]
+        level ||= options[:level]  
         BEM[:assets].each do |type, tech|
-            asset = File.join(Rails.root, "app", "assets", type.to_s, "application" + tech[:ext])
-            destination = [path, name, name + tech[:ext]].reject(&:empty?)
-            line = "#{tech[:import]} #{File.join(destination)}#{tech[:postfix]}"
+            asset = File.join(Rails.root, BEM[:root], level, level_assets_path, type.to_s, "level" + tech[:ext])
+            destination = ["../../../../", path, name, name + tech[:ext]].reject(&:empty?)
+            line = "#{ tech[:import] } #{ File.join(destination) }#{ tech[:postfix] }"
 
             tmp = Tempfile.new("temp")
             open(asset, 'r').each do |l|
@@ -180,8 +259,7 @@ class Bem < Thor
                 cut_assets(ess_name, path)
             when :usage
                 search_usage_information(ess_name, path) if essence_exist?(destination)
-            else raise print_message("You should set params. Try 'thor help bem:#{action}' for more information", 'red')
+            else raise print_message("You should set params. Try 'thor help bem:#{ action }' for more information", 'red')
         end
     end
-
 end
