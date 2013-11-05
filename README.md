@@ -26,6 +26,10 @@ Then you should run install generator:
 This generator creates Thor task with templates. You should run to watch your new instruments:
     
     $ thor -T 
+
+If you want use default level, you must be create folders tree for it:
+
+    $ thor bem:levels -a --default
     
 You should restart server after install. 
 You can customize everythink in initializers/bem.rb!
@@ -35,28 +39,44 @@ You can customize everythink in initializers/bem.rb!
 You can create blocks, elements, modificators and groups for blocks. It's awesome! Also you can remove them and watch lists of blocks, block elements, blocks mods and etc. Try thor help for more info.
 
 Default blocks folder structure:
- - **blocks**
-   - **block_name**
-     - **elements**
-       - **__element_name**
-         - __element_name.html.haml
-         - __element_name.css.sass
-         - __element_name.coffee
-         - __element_name.md
-     - **mods**
-       - **_mod_name**
-         - **_mod_value**
-         - _mod_name.css.sass
-         - _mod_name.coffee
-         - _mod_name.md
-     - block_name.html.haml
-     - block_name.css.sass
-     - block_name.coffee
-     - block_name.md
-   - **group_name**
-     - **block_name**
+
+- **bem**
+    - **level_name**
+        - **block_name**
+            - **elements**
+                - **__element_name**
+                    - __element_name.html.haml
+                    - __element_name.css.sass
+                    - __element_name.coffee
+                    - __element_name.md
+            - **mods**
+                - **_mod_name**
+                    - **_mod_value**
+                    - _mod_name.css.sass
+                    - _mod_name.coffee
+                    - _mod_name.md
+            - block_name.html.haml
+            - block_name.css.sass
+            - block_name.coffee
+            - block_name.md
 
 You can specify all prefixes for blocks, elements and mods in bem.rb initializer.
+
+**All blocks now creates on levels.**
+
+### Levels
+
+Create new level:
+
+    $ thor bem:levels -a -n level_name
+    
+Get from git:
+
+    $ thor bem:levels -a -g git@github.com:verybigman/bem-controls.git
+    
+Copy from directory:
+
+    $ thor bem:levels -a -d ~/path/to/level_name
 
 ### Creating
 
@@ -64,7 +84,7 @@ Easy block creating look like:
 
     $ thor bem:create -b test
     
-Block with modificator:
+Block with mod:
 
     $ thor bem:create -b test -m large
 
@@ -87,14 +107,12 @@ Element with pretty mod:
 Block in special technolody:
     $ thor bem:create -b test -T sass
 
-Element in special tehcnology creates like block. List of know technologies you can see in bem.rb
-initializer. You can customize it. After block, element or mod creating generator 
-adds to assets main file (application) require string. Ex:
+Element in special tehcnology creates like block. List of know technologies you can see in bem.rb initializer. You can customize it. After block, element or mod creating generator adds to level assets (level_name/.bem/assets) main file (level) require string. Ex:
 ```sass
-//= require test/elements/__field/__field.css.sass
+//= require ../../../../test/elements/__field/__field.css.sass
 ```
-You should remember! You are not in any case should not be writing styles and scripts in assets application files.
-Use them like configs, for require only. This involves using Sprockets.
+You should remember! You are not in any case should not be writing styles and scripts in assets levels and application files.
+Use them like configuration files, for require only. This involves using Sprockets.
 
 ### Rendering
 
@@ -136,12 +154,12 @@ Now templates exists for haml, sass, coffee and md technologies, but you will cr
 lib/tasks/templates. For example, you can watch haml template:
 ```haml
 - haml_tag this[:tag], this[:attrs]
-	= content
+    = content
 ```
 Or Slim template:
 ```slim
 * this[:tag], this[:attrs]
-	= content
+    = content
 ```
 This and content is BEM helpers for rendering. For access to default essence propeties use 'this' method.
 For access to custom essence properties use 'ctx' method.
@@ -161,7 +179,6 @@ If you want it, please watch [here](https://github.com/Vasfed/csso-rails).
 1. i-bem.js for html.
 2. deps.js
 3. Mods with restructure. Now you can't use mods with templates(haml, slim and etc.), but they generates.
-4. Bem exutable. Work with Thor is not convenient.
 
 ## Contributing
 
