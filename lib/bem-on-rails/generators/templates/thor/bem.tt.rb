@@ -71,6 +71,7 @@ class Bem < Thor
     method_option :git, type: :string, aliases: "-g", desc: "From git repository"
     method_option :dir, type: :string, aliases: "-d", desc: "From local directory"
     method_option :new, type: :string, aliases: "-n", desc: "Create new level"
+    method_option :default, type: :string, desc: "Create default level tree"
     def levels
         if options[:add]
             level_name = ""
@@ -95,6 +96,12 @@ class Bem < Thor
                 make_level_assets_path level
                 update_assets_with_level level_name
                 test_level(level) ? level_added : level_error
+            elsif options[:default]
+                level_name = BEM[:app]
+                level = Rails.root.join BEM[:root], level_name
+                make_level_assets_path level
+                update_assets_with_level level_name
+                test_level(level) ? level_added : level_error 
             end       
         end    
     end
@@ -124,7 +131,7 @@ class Bem < Thor
     def update_assets_with_level(level)
         BEM[:assets].each do |type, tech|
             asset = File.join(Rails.root, "app", "assets", type.to_s, "application" + tech[:ext])
-            destination = [level, level_assets_path, type.to_s, "level" + tech[:ext]]
+            destination = [level, level_assets_path, type.to_s, "level" + tech[:ext]]  
             append_file asset, "\n#{ tech[:import] } #{ File.join(destination) }#{ tech[:postfix] }"
         end
     end
@@ -173,6 +180,7 @@ class Bem < Thor
             # BEM[:root] > level > .bem > assets
             # 4 ../
             destination = ["../../../../", path, name, name + tech[:ext]].reject(&:empty?)
+            create_file asset unless File.exist?(asset)              
             append_file asset, "\n#{ tech[:import] } #{ File.join(destination) }#{ tech[:postfix] }"
         end
     end
