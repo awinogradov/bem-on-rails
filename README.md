@@ -1,6 +1,6 @@
 [![Bem on Rails](http://habrastorage.org/storage3/551/97d/0c5/55197d0c503e312952195b2ae0e4c337.png)](https://github.com/verybigman/bem-on-rails)
 
-# BEM on Rails [![Code Climate](https://codeclimate.com/github/verybigman/bem-on-rails.png)](https://codeclimate.com/github/verybigman/bem-on-rails)
+# BEM on Rails
 
 Work with BEM methodology in Rails applications. BEM on Rails is ruby copy from bem-tools. 
 You can read about bem-tools [here](http://bem.info/tools/bem/) and BEM methodology [here](http://bem.info/method/).
@@ -171,19 +171,4 @@ Read [here](http://habrahabr.ru/post/181880/) about it.
 
 If you want it, please watch [here](https://github.com/Vasfed/csso-rails).
 
-*__Stay BEMed!__*
-
-## Tomorrow
-
-0. Incapsulate helpers methods and isolate them from project helpers.
-1. i-bem.js for html.
-2. deps.js
-3. Mods with restructure. Now you can't use mods with templates(haml, slim and etc.), but they generates.
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+#### Think better. Stay BEMed!
