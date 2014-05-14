@@ -1,3 +1,5 @@
+require 'bem-on-rails/bem_render_helper'
+
 module Bemonrails
     class Railtie < Rails::Railtie
         initializer "railtie.configure_rails_initialization" do
