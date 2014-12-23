@@ -17,7 +17,7 @@ module Bemonrails
     def e(e_name, builder={})
       unless e_name.blank?
         path = File.join path_resolve(:element, builder, false)
-        target = File.join path, build_e(e_name), build_e(this[:block], e_name)
+        target = File.join path, build_e(e_name), build_e(@this[:block], e_name)
         get_bemattributes_from builder
         set_names :element, e_name
         update_bemattributes
@@ -61,12 +61,8 @@ module Bemonrails
     end
 
     def install_mods(mods, classes_array, bl, el=false)
-      if mods
-        mods.each do |mod|
-          mod.each do |m, v|
-            classes_array.push(build_m(build_b(bl), build_e(bl, el), m.to_s, v))
-          end
-        end
+      mods.each do |m, v|
+        classes_array.push(build_m(build_b(bl), el ? build_e(bl, el) : nil, m.to_s, v))
       end
     end
 
@@ -79,11 +75,11 @@ module Bemonrails
     end
 
     def generate_class(essence, classes_array)
-      if essence[:block] && !essence[:elem]
-        classes_array.push(block(essence[:block]))
+      if essence[:block]
+        classes_array.push(build_b(essence[:block]))
         install_mods(essence[:mods], classes_array, essence[:block])
-      elsif essence[:elem]
-        classes_array.push(block(essence[:block]) + element(essence[:elem]))
+      elsif essence[:block] && essence[:elem]
+        classes_array.push(build_e(essence[:block], essence[:elem]))
         install_mods(essence[:elemMods], classes_array, essence[:block], essence[:elem])
       end
     end

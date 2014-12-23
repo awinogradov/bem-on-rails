@@ -95,11 +95,12 @@ module Bemonrails
       end
     end
 
-    def mod(b=options[:block], e=options[:element], m=options[:mod], v=options[:value])
-        name = b
-        name = name + element(b, e) if e
+    def build_m(b=options[:block], e=options[:element], m=options[:mod], v=options[:value])
+        name = build_b(b)
+        name = build_e(b, e) if e
         name = name + BEM[:mods][:prefix] + m
         name = name + BEM[:mods][:postfix] + v if v
+        name
     end
 
     def template_exists?(file)
