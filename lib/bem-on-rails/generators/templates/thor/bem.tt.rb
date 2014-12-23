@@ -54,15 +54,15 @@ class Bem < Thor
     def list
         path = essence ? build_path_for(essence) : build_path_for(:block)
         case essence
-            when :block
-                print_elements_list(block, path)
-                print_mods_list(block, path)
-            when :element
-                print_mods_list(element, path)
-            when :mod
-                print_values_list(element, path)
-            else
-                print_blocks_list(path)
+        when :block
+            print_elements_list(block, path)
+            print_mods_list(block, path)
+        when :element
+            print_mods_list(element, path)
+        when :mod
+            print_values_list(element, path)
+        else
+            print_blocks_list(path)
         end
     end
 
@@ -101,9 +101,9 @@ class Bem < Thor
                 level = Rails.root.join BEM[:root], level_name
                 make_level_assets_path level
                 update_assets_with_level level_name
-                test_level(level) ? level_added : level_error 
-            end       
-        end    
+                test_level(level) ? level_added : level_error
+            end
+        end
     end
 
     protected
@@ -113,7 +113,7 @@ class Bem < Thor
     end
 
     def level_added
-        print_message("New level added successfully! Change BEM[:levels] in bem.rb for available levels.", "green")            
+        print_message("New level added successfully! Change BEM[:levels] in bem.rb for available levels.", "green")
     end
 
     def level_error
@@ -131,16 +131,16 @@ class Bem < Thor
     def update_assets_with_level(level)
         BEM[:assets].each do |type, tech|
             asset = File.join(Rails.root, "app", "assets", type.to_s, "application" + tech[:ext])
-            destination = [level, level_assets_path, type.to_s, "level" + tech[:ext]]  
-            create_file asset unless File.exist?(asset)       
+            destination = [level, level_assets_path, type.to_s, "level" + tech[:ext]]
+            create_file asset unless File.exist?(asset)
             append_file asset, "\n#{ tech[:import] } #{ File.join(destination) }#{ tech[:postfix] }"
         end
     end
 
     def make_level_assets_path(level)
-       BEM[:assets].each do |type, tech|
+        BEM[:assets].each do |type, tech|
             create_file File.join level, level_assets_path, type.to_s, "level" + tech[:ext]
-        end 
+        end
     end
 
     def essence_exist?(essence_dir)
@@ -154,7 +154,7 @@ class Bem < Thor
         # directory. Watch existing templates for example.
         # What is .tt? It is custom extension for finding templates in other files.
         if options[:tech] # Maybe recive from command line
-            template "#{ options[:tech] }.tt", File.join(essence_options[:dir], path, names[:name], names[:name] + BEM[:techs][options[:tech].to_sym])
+            template "#{ options[:tech] }.tt", File.join(BEM[:root], path, names[:name] + BEM[:techs][options[:tech].to_sym])
         else
             create_defaults(essence_options, path, names)
         end
@@ -162,36 +162,36 @@ class Bem < Thor
 
     def create_defaults(essence_options, path, names)
         BEM[:default].each do |tech|
-            template "#{ tech }.tt", File.join(essence_options[:dir], path, names[:name], names[:name] + BEM[:techs][tech])
+            template "#{ tech }.tt", File.join(BEM[:root], path, names[:name] + BEM[:techs][tech])
         end
     end
 
     def remove_essence(essence_options, path)
         names = generate_names
-        destination = File.join(essence_options[:dir], path, names[:name])
+        destination = File.join(essence_options[:dir], path)
         destination = File.join(destination, names[:name] + BEM[:techs][options[:tech].to_sym]) if options[:tech]
         remove_dir destination
     end
 
     def update_assets(name, path)
         level = BEM[:level]
-        level ||= options[:level]  
+        level ||= options[:level]
         BEM[:assets].each do |type, tech|
             asset = File.join(Rails.root, BEM[:root], level, level_assets_path, type.to_s, "level" + tech[:ext])
             # BEM[:root] > level > .bem > assets
             # 4 ../
-            destination = ["../../../../", path, name, name + tech[:ext]].reject(&:empty?)
-            create_file asset unless File.exist?(asset)              
+            destination = ["../../../../", path, name + tech[:ext]].reject(&:empty?)
+            create_file asset unless File.exist?(asset)
             append_file asset, "\n#{ tech[:import] } #{ File.join(destination) }#{ tech[:postfix] }"
         end
     end
 
     def cut_assets(name, path)
         level = BEM[:level]
-        level ||= options[:level]  
+        level ||= options[:level]
         BEM[:assets].each do |type, tech|
             asset = File.join(Rails.root, BEM[:root], level, level_assets_path, type.to_s, "level" + tech[:ext])
-            destination = ["../../../../", path, name, name + tech[:ext]].reject(&:empty?)
+            destination = ["../../../../", path, name + tech[:ext]].reject(&:empty?)
             line = "#{ tech[:import] } #{ File.join(destination) }#{ tech[:postfix] }"
 
             tmp = Tempfile.new("temp")
@@ -247,19 +247,19 @@ class Bem < Thor
 
     def manipulate_essence(action, ess, path)
         ess_name = send(ess)
-        ess_name = mod(options[:value] ? options[:value] : options[:mod]) if ess == :mod
+        ess_name = mod(options[:mod]) if ess == :mod
         destination = File.join(path, ess_name)
 
         case action
-            when :create
-                create_essence(BEM[ess.to_s.pluralize.to_sym], path)
-                update_assets(ess_name, path)
-            when :remove
-                remove_essence(BEM[ess.to_s.pluralize.to_sym], path)
-                cut_assets(ess_name, path)
-            when :usage
-                search_usage_information(ess_name, path) if essence_exist?(destination)
-            else raise print_message("You should set params. Try 'thor help bem:#{ action }' for more information", 'red')
+        when :create
+            create_essence(BEM[ess.to_s.pluralize.to_sym], path)
+            update_assets(ess_name, path)
+        when :remove
+            remove_essence(BEM[ess.to_s.pluralize.to_sym], path)
+            cut_assets(ess_name, path)
+        when :usage
+            search_usage_information(ess_name, path) if essence_exist?(destination)
+        else raise print_message("You should set params. Try 'thor help bem:#{ action }' for more information", 'red')
         end
     end
 end

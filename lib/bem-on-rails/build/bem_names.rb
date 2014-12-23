@@ -105,18 +105,14 @@ module Bemonrails
       end
     end
 
-    def mod(name= options[:mod], value=false)
-      if value
-        BEM[:mods][:prefix] + value
-      else
+    def mod(name=options[:mod])
         BEM[:mods][:prefix] + name
-      end
     end
 
     def template_exists?(file)
       BEM[:techs].each do |tech, extension|
         if File.exists? file + extension
-          return true 
+          return true
         end
       end
     end

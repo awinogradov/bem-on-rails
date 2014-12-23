@@ -45,7 +45,7 @@ BEM[:elements] = {
 # Mods directory in every block directory.
 # Write 'dir: ""' for creating mods in root of block.
 BEM[:mods] = {
-  dir: "mods",
+  dir: "",
   prefix: "_",
   postfix: ""
 }
