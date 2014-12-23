@@ -1,7 +1,7 @@
 module Bemonrails
   module BemNames
     # Resolve directories
-    def build_path_for(essence, builder=options, include_level=true)
+    def path_resolve(essence, builder=options, include_level=true)
       current_level = builder[:level] ? builder[:level] : BEM[:level]
       path = include_level ? [current_level] : []
 
@@ -79,7 +79,11 @@ module Bemonrails
 
     # Build element name
     def build_e(b=options[:block], e=options[:element])
-      b + BEM[:elements][:prefix] + e
+      if b
+        b + BEM[:elements][:prefix] + e
+      else
+        BEM[:elements][:prefix] + e
+      end
     end
 
     def path_m(essence, m=options[:mod])
