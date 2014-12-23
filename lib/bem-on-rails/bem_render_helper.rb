@@ -4,8 +4,9 @@ module Bemonrails
 
     def b(name, builder={})
       unless name.blank?
+        builder[:block] = name
         path = File.join build_path_for(:block, builder, false)
-        target = File.join path, block(name), block(name)
+        target = File.join path, block(name)
         get_bemattributes_from builder
         set_names :block, name
         update_bemattributes
@@ -28,7 +29,7 @@ module Bemonrails
       @this = {}
       BEM[:attrs].each do |mod|
         if builder[mod]
-          @this[mod] = builder[mod] 
+          @this[mod] = builder[mod]
           builder = builder.except(mod)
         end
       end
@@ -63,22 +64,18 @@ module Bemonrails
       if mods
         el = el ? element(el) : ""
         mods.each do |mod|
-          if mod.kind_of? Hash
-            mod.each do |mod_name, mod_value|
-              classes_array.push(block(bl) + el + mod(mod_name.to_s) + mod(mod_name.to_s, mod_value))
-            end
-          else
-            classes_array.push(block(bl) + el + mod(mod.to_s))
-          end  
-        end 
+          mod.each do |mod_name, mod_value|
+            classes_array.push(mod(block(bl), element(bl, el), mod_name.to_s, mod_value))
+          end
+        end
       end
     end
 
     def install_mix(mixs, classes_array)
       if mixs
         mixs.each do |mix|
-          generate_class(mix, classes_array) 
-        end   
+          generate_class(mix, classes_array)
+        end
       end
     end
 
@@ -86,7 +83,7 @@ module Bemonrails
       if essence[:block] && !essence[:elem]
         classes_array.push(block(essence[:block]))
         install_mods(essence[:mods], classes_array, essence[:block])
-      elsif essence[:elem] 
+      elsif essence[:elem]
         classes_array.push(block(essence[:block]) + element(essence[:elem]))
         install_mods(essence[:elemMods], classes_array, essence[:block], essence[:elem])
       end

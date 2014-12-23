@@ -38,16 +38,16 @@ BEM[:blocks] = {
 # Elements directory in every block directory.
 # Write 'dir: ""' for creating elements in root of block.
 BEM[:elements] = {
-  dir: "elements",
-  prefix: "__",
-  postfix: ""
+    dir: '',
+    prefix: '__',
+    postfix: ''
 }
 # Mods directory in every block directory.
 # Write 'dir: ""' for creating mods in root of block.
 BEM[:mods] = {
-  dir: "",
-  prefix: "_",
-  postfix: ""
+    dir: '',
+    prefix: '_',
+    postfix: '_'
 }
 # [!] If you work with sass and you want to create blocks, elements and mods in sass,
 # you should convert 'application.css' to 'application.css.sass'. Because, when

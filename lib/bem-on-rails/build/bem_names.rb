@@ -1,117 +1,106 @@
 module Bemonrails
   module BemNames
-    # Directories paths.
+    # Resolve directories
     def build_path_for(essence, builder=options, include_level=true)
       current_level = builder[:level] ? builder[:level] : BEM[:level]
       path = include_level ? [current_level] : []
+
       case essence
       when :mod
         # This is for mods with value
-        if builder[:block] && builder[:element] && builder[:value]
-          path.push(mod_directory(:element), mod)
-        elsif builder[:block] && builder[:value]
-          path.push(mod_directory(:block), mod)
-          # This is for mods without value
-        elsif builder[:block] && builder[:element]
-          path.push(mod_directory(:element))
+        if builder[:block] && builder[:element]
+          path.push path_m(:element)
         elsif builder[:block]
-          path.push(mod_directory(:block))
+          path.push path_m(:block)
         else
           raise print_message("Mods must be for block or element.", 'red')
         end
       when :element
-        path.push(element_directory)
+        path.push path_e(builder[:block], builder[:element])
       when :block
-        # Yea! Do nothing!
+        path.push build_b(builder[:block])
       else
         raise print_message("Unknown params. Try 'thor help bem:create'", 'red')
       end
-      File.join(path.compact)
+
+      File.join path.compact
     end
 
-    def path_to_block(path, level="")
-      File.join Rails.root.join(BEM[:root], level + path)
-    end
-
-    def generate_names(builder=options)
+    def generate_klass(builder=options)
       names = {}
+
       # Generate names for block, his mods and they values
       if builder[:block]
 
-        names[:klass] = names[:name] = block
+        names[:klass] = build_b(builder[:block])
 
-        if builder[:mod]
-          names[:name] = mod
-          names[:klass] = block + names[:name]
-        end
-
-        if builder[:value]
-          names[:name] =  mod(builder[:value])
-          names[:klass] = block + mod + names[:name]
-        end
+        # If block have mods
+        names[:klass] = build_m(builder[:block], nil, builder[:mod], builder[:value]) if builder[:mod]
       end
 
       # Generate names for elements, they mods and they values
       if builder[:element]
 
-        names[:name] = element
-        names[:klass] += names[:name]
+        names[:klass] = build_e(builder[:block], builder[:element])
 
-        if builder[:mod]
-          names[:name] = mod
-          names[:klass] = block + element + names[:name]
-        end
-
-        if builder[:value]
-          names[:name] =  mod(builder[:value])
-          names[:klass] = block + element + mod + names[:name]
-        end
+        # If element have mods
+        names[:klass] = build_m(builder[:block], builder[:element], builder[:mod], builder[:value]) if builder[:mod]
       end
 
       names
     end
 
-    def essence
-      if options[:block] && !options[:element] && !options[:mod]
-        :block
-      elsif options[:element] && !options[:mod]
-        :element
-      elsif options[:mod]
-        :mod
+    def resolve_essence
+      essence = :block
+
+      if options[:element]
+        essence = :element
+        if options[:mod]
+          essence = :mod
+        end
       end
+
+      essence
     end
 
-    def block(name=options[:block])
-      BEM[:blocks][:prefix] + name
+    def path_l(path, level=options[:level])
+        File.join Rails.root.join(BEM[:root], level, path)
     end
 
-    def element_directory
-      block_name = @this ? @this[:block] : options[:block]
-      File.join(block(block_name), BEM[:elements][:dir])
+    # Build block name
+    def build_b(b=options[:block])
+      BEM[:blocks][:prefix] + b
     end
 
-    def element(name=options[:element])
-      BEM[:elements][:prefix] + name
+    # Build block path
+    def path_e(b=options[:block], e=options[:element])
+      File.join build_b(b), BEM[:elements][:dir], BEM[:elements][:prefix] + e
     end
 
-    def mod_directory(essence)
+    # Build element name
+    def build_e(b=options[:block], e=options[:element])
+      b + BEM[:elements][:prefix] + e
+    end
+
+    def path_m(essence, m=options[:mod])
       case essence
-      when :block
-        File.join(block, BEM[:mods][:dir])
       when :element
-        File.join(element_directory, element, BEM[:mods][:dir])
+        File.join path_e, build_e, BEM[:mods][:dir], BEM[:mods][:prefix] + m
       else
-        File.join(block, BEM[:mods][:dir])
+        File.join build_b, BEM[:mods][:dir], BEM[:mods][:prefix] + m
       end
     end
 
-    def mod(name=options[:mod])
-        BEM[:mods][:prefix] + name
+    def mod(b=options[:block], e=options[:element], m=options[:mod], v=options[:value])
+        name = b
+        name = name + element(b, e) if e
+        name = name + BEM[:mods][:prefix] + m
+        name = name + BEM[:mods][:postfix] + v if v
     end
 
     def template_exists?(file)
-      BEM[:techs].each do |tech, extension|
-        if File.exists? file + extension
+      BEM[:techs].each do |tech, ext|
+        if File.exists? file + ext
           return true
         end
       end
