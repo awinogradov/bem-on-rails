@@ -2,6 +2,7 @@ require 'bem-on-rails/bem_render_helper'
 
 module Bemonrails
     class Railtie < Rails::Railtie
+
         initializer "railtie.configure_rails_initialization" do
             require 'bem-on-rails/initializers/bem'
         end
@@ -14,6 +15,7 @@ module Bemonrails
             include Bemonrails::Levels
             before_filter :parse_bem_levels
         end
+
     end
 
 end

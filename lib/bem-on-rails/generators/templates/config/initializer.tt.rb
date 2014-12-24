@@ -10,29 +10,15 @@
 # Default directories, try to customize.
 # Blocks directory in root of rails app.
 # BEM[:blocks] = {
-#  dir: BEM[:root],
-#  prefix: "",
-#  postfix: ""
-# }
-# Elements and mods directory in every block. Configure it's like blocks.
-# Write 'dir: ""' for creating elements in root of block.
-# BEM[:elements] = {
-#   ...
-# }
-# BEM[:mods] = {
-#   ...
+#    dir: BEM[:root],
+#    prefix: "",
+#    postfix: ""
 # }
 
-# Work with levels
-# Add new level with 'thor bem:levels'
-# Require it: 
-# bem_controls = { name: "bem-controls", 
-#                  git:  "git@github.com:verybigman/bem-controls.git" }
-# Push to levels stack:
-# BEM[:levels].push(bem_controls)
-# Set it default if you want:
-# BEM[:level] = bem_controls[:name]
-# After install default level is your app name. Take it by BEM[:app].
+# Elements and mods directory in every block. Configure it's like blocks.
+# Write 'dir: ""' for creating elements in root of block.
+# BEM[:elements] = {}
+# BEM[:mods] = {}
 
 # [!] If you work with sass and you want to create blocks, elements and mods in sass,
 # you should convert 'application.css' to 'application.css.sass'. Because, when
@@ -40,15 +26,12 @@
 # files. This also applies to scss, styl, less and coffee. Customize this for use your
 # favorite techs. Asset type may have postfix and it's optional.
 # BEM[:assets] = {
-#   stylesheets: {
-#      ext: BEM[:techs][:scss],
-#      import: '//= require',
-#      posfix: ';'
-#   },
-#   javascripts: {
-#      ...  
-#   }
+#     stylesheets: {
+#        ext: BEM[:techs][:scss],
+#        import: '//= require',
+#        posfix: ';'
+#     },
+#     javascripts: {
+#        ...
+#     }
 # }
-
-# [!] Use CSSO instead of YUI.
-# Watch here https://github.com/Vasfed/csso-rails
