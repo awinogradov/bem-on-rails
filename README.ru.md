@@ -1,7 +1,5 @@
 # BEM on Rails
 
-This README also available in [russian](https://github.com/verybigman/bem-on-rails/blob/master/README.ru.md).
-
 Work with BEM methodology in Rails applications. BEM on Rails is ruby fork of bem-tools. You can read about bem-tools [here](http://bem.info/tools/bem/) and BEM methodology [here](http://bem.info/method/). Also i talk about this gem in russian on YaC 2013, you can watch this [here](http://tech.yandex.ru/events/bemup/yac-bemup/talks/1349/).
 
 ## Installation
@@ -17,12 +15,12 @@ And then execute:
 Or install it yourself as:
 
     $ gem install bem-on-rails
-
+    
 Then you should run install generator:
 
     $ rails g bemonrails:install
-
-You should restart server after install.
+    
+You should restart server after install. 
 You can customize everythink in initializers/bem.rb!
 
 ## Usage
@@ -53,23 +51,23 @@ You can read more about folders structure [here](http://bem.info/method/filesyst
 Easy block creating look like:
 
     $ thor bem:create -l level-name -b test
-
+    
 Block with mod:
 
     $ thor bem:create -l level-name -b test -m large
 
 Block with pretty mod with value:
-
+    
     $ thor bem:create -l level-name -b test -m color -v red
 
 Create element:
 
     $ thor bem:create -l level-name -b test -e icon
-
+    
 Element with mod:
 
     $ thor bem:create -l level-name -b test -e icon -m large
-
+    
 Element with pretty mod:
 
     $ thor bem:create -l level-name -b test -e icon -m size -v small
