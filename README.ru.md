@@ -1,31 +1,27 @@
 # BEM on Rails
 
-Work with BEM methodology in Rails applications. BEM on Rails is ruby fork of bem-tools. You can read about bem-tools [here](http://bem.info/tools/bem/) and BEM methodology [here](http://bem.info/method/). Also i talk about this gem in russian on YaC 2013, you can watch this [here](http://tech.yandex.ru/events/bemup/yac-bemup/talks/1349/).
+Позволяет использовать БЭМ методологию в Rails приложениях. BEM on Rails это Ruby форк частичного функционала bem-tools. Узнать, что такое bem-tools можно здесь [здесь](http://bem.info/tools/bem/), а о самой БЭМ методологии [здесь](http://bem.info/method/). Кроме того, я выступал с докладом об этом геме на YaC 2013, который можно найти [здесь](http://tech.yandex.ru/events/bemup/yac-bemup/talks/1349/).
 
-## Installation
+## Установка
 
-Add this line to your application's Gemfile:
+Добавьте эту строку в Gemfile:
 
     gem 'bem-on-rails'
 
-And then execute:
+Затем запустите бандлер:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install bem-on-rails
     
-Then you should run install generator:
+Далее запускаем генератор:
 
     $ rails g bemonrails:install
     
-You should restart server after install. 
-You can customize everythink in initializers/bem.rb!
+Если сервер запущен, его надо бы перезапустить. 
+Вся кастомизация доступна в initializers/bem.rb
 
-## Usage
+## Использование
 
-You can create blocks, elements, modificators and levels. Default folder structure:
+Вы можете создавать блоки, элементы и их модификаторы на разных уровнях. Так выглядит стандартная структура директорий:
 
 - **bem**
     - **level_name**
@@ -44,96 +40,77 @@ You can create blocks, elements, modificators and levels. Default folder structu
             - block_name.coffee
             - block_name.md
 
-You can read more about folders structure [here](http://bem.info/method/filesystem/). Also specify all prefixes for blocks, elements and mods in bem.rb initializer.
+Больше информации об организации файловой системы можно найти [здесь](http://bem.info/method/filesystem/).
 
-### Creating
+### Создание новых блоков
 
-Easy block creating look like:
+Простой пример:
 
     $ thor bem:create -l level-name -b test
     
-Block with mod:
+Блок с булевым модификатором:
 
     $ thor bem:create -l level-name -b test -m large
 
-Block with pretty mod with value:
+Блок с модификатором и его значением:
     
     $ thor bem:create -l level-name -b test -m color -v red
 
-Create element:
+Создание элемента:
 
     $ thor bem:create -l level-name -b test -e icon
-    
-Element with mod:
 
-    $ thor bem:create -l level-name -b test -e icon -m large
-    
-Element with pretty mod:
+Создание сущности в необходимой технологии:
 
-    $ thor bem:create -l level-name -b test -e icon -m size -v small
-
-Block in special technolody:
     $ thor bem:create -l level-name -b test -T sass
 
-Element in special tehcnology creates like block. List of know technologies you can see in bem.rb initializer. You can customize it. After block, element or mod creating generator adds to level assets (level_name/.bem/assets) main file (level) require string. Ex:
+Список используюмых технологий находится в bem.rb initializer. Во время создания сущностей создаются записи в файлах ассетов (level_name/.bem/assets). Например:
 ```sass
 //= require ../../../../test/__field/test__field.css.sass
 ```
-You should remember! You are not in any case should not be writing styles and scripts in assets levels and application files.
-Use them like configuration files, for require only. This involves using Sprockets.
+Пожалуйста, не пишите ничего самостоятельно в этих файлах.
 
-### Rendering
+### Вьюхи
 
-In your view you should write this:
+Haml:
 ```ruby
-= b "test", mods: [{color: "red"}], content: [{ elem: "icon", elemMods: [{size: "small"}] }]
+= block "test", mods: [{color: "red"}], content: [{ elem: "icon", elemMods: [{size: "small"}] }]
+
+= block "test", mods: [:super, {color: "red"}], content: []
+
+= block "test", attrs: {src: "/img.png"}, content: []
+
+= block "test", cls: "custom", content: []
+
+= block "test", tag: "article", content: []
 ```
 
-If block in group:
-```ruby
-= b "test", group: "name", mods: [{color: "red"}], content: []
-```
+Синтаксис схож с ориганльным из [BEMJSON](http://ru.bem.info/technology/bemjson/v2/bemjson/).
 
-Block with mods without value:
-```ruby
-= b "test", mods: [:super, {color: "red"}], content: []
-```
+### Шаблоны
 
-Block with custom attributes for tag:
-```ruby
-= b "test", attrs: {src: "/img.png"}, content: []
-```
-
-Block with custom class for tag:
-```ruby
-= b "test", cls: "custom", content: []
-```
-
-Block with custom tag for block( 'div' is default ):
-```ruby
-= b "test", tag: "article", content: []
-```
-
-Syntax is look like [bemhtml](http://ru.bem.info/articles/bemhtml-reference/).
-
-### Templates
-
-Now templates exists for haml, sass, coffee and md technologies, but you will create your templates in
-lib/tasks/templates. For example, you can watch haml template:
+По умолчанию шаблоны можно писать на haml, sass, coffee и md, но вы можете создать свои технологии, какие вам только будут необходимы по примеру со стандартными из lib/tasks/templates. Например так выглядит шаблон для haml:
 ```haml
 - haml_tag this[:tag], this[:attrs]
     = content
 ```
-Or Slim template:
+А вот так для Slim:
 ```slim
 * this[:tag], this[:attrs]
     = content
 ```
-This and content is BEM helpers for rendering. For access to default essence propeties use 'this' method.
-For access to custom essence properties use 'ctx' method.
+`this` и `content` это БЭМ помощники для рендеринга. `this` используется для доступа к стандартным полям сущности, а 'ctx' для доступа к полям контекста.
 
-### You want more BEM?
+### Хотите больше информации о БЭМ?
 
-Go to [bem.info](http://bem.info)
+Много полезных статей на [официальном БЭМ сайте](http://bem.info)
 
-#### Think better. Stay BEMed!
+### Авторы
+
+- Антон Виноградов ([verybigman](https://github.com/verybigman)) @awinogradov
+
+### Идеи, замечания и пожелания
+
+Все это можно оформить в виде [issues](https://github.com/verybigman/bem-on-rails/issues) на GitHub.
+
+### [MIT](http://en.wikipedia.org/wiki/MIT_License) Лицензия
