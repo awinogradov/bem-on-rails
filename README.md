@@ -1,9 +1,6 @@
-[![Bem on Rails](http://habrastorage.org/storage3/551/97d/0c5/55197d0c503e312952195b2ae0e4c337.png)](https://github.com/verybigman/bem-on-rails)
-
 # BEM on Rails
 
-Work with BEM methodology in Rails applications. BEM on Rails is ruby copy from bem-tools. 
-You can read about bem-tools [here](http://bem.info/tools/bem/) and BEM methodology [here](http://bem.info/method/). Also i talk about this gem in russian on YAC 2013, watch this [here](http://tech.yandex.ru/events/bemup/yac-bemup/talks/1349/).
+Work with BEM methodology in Rails applications. BEM on Rails is ruby fork of bem-tools. You can read about bem-tools [here](http://bem.info/tools/bem/) and BEM methodology [here](http://bem.info/method/). Also i talk about this gem in russian on YaC 2013, you can watch this [here](http://tech.yandex.ru/events/bemup/yac-bemup/talks/1349/).
 
 ## Installation
 
@@ -22,94 +19,65 @@ Or install it yourself as:
 Then you should run install generator:
 
     $ rails g bemonrails:install
-
-This generator creates Thor task with templates. You should run to watch your new instruments:
-    
-    $ thor -T 
-
-If you want use default level, you must be create folders tree for it:
-
-    $ thor bem:levels -a --default
     
 You should restart server after install. 
 You can customize everythink in initializers/bem.rb!
 
 ## Usage
 
-You can create blocks, elements, modificators and groups for blocks. It's awesome! Also you can remove them and watch lists of blocks, block elements, blocks mods and etc. Try thor help for more info.
-
-Default blocks folder structure:
+You can create blocks, elements, modificators and levels. Default folder structure:
 
 - **bem**
     - **level_name**
         - **block_name**
-            - **elements**
-                - **__element_name**
-                    - __element_name.html.haml
-                    - __element_name.css.sass
-                    - __element_name.coffee
-                    - __element_name.md
-            - **mods**
-                - **_mod_name**
-                    - **_mod_value**
-                    - _mod_name.css.sass
-                    - _mod_name.coffee
-                    - _mod_name.md
+            - **__element_name**
+                - block-name__element_name.html.haml
+                - block-name__element_name.css.sass
+                - block-name__element_name.coffee
+                - block-name__element_name.md
+            - **_mod_name**
+                - block-name_mod_name.css.sass
+                - block-name_mod_name.coffee
+                - block-name_mod_name.md
             - block_name.html.haml
             - block_name.css.sass
             - block_name.coffee
             - block_name.md
 
-You can specify all prefixes for blocks, elements and mods in bem.rb initializer.
-
-**All blocks now creates on levels.**
-
-### Levels
-
-Create new level:
-
-    $ thor bem:levels -a -n level_name
-    
-Get from git:
-
-    $ thor bem:levels -a -g git@github.com:verybigman/bem-controls.git
-    
-Copy from directory:
-
-    $ thor bem:levels -a -d ~/path/to/level_name
+You can read more about folders structure [here](http://bem.info/method/filesystem/). Also specify all prefixes for blocks, elements and mods in bem.rb initializer.
 
 ### Creating
 
 Easy block creating look like:
 
-    $ thor bem:create -b test
+    $ thor bem:create -l level-name -b test
     
 Block with mod:
 
-    $ thor bem:create -b test -m large
+    $ thor bem:create -l level-name -b test -m large
 
 Block with pretty mod with value:
     
-    $ thor bem:create -b test -m color -v red
+    $ thor bem:create -l level-name -b test -m color -v red
 
 Create element:
 
-    $ thor bem:create -b test -e icon
+    $ thor bem:create -l level-name -b test -e icon
     
 Element with mod:
 
-    $ thor bem:create -b test -e icon -m large
+    $ thor bem:create -l level-name -b test -e icon -m large
     
 Element with pretty mod:
 
-    $ thor bem:create -b test -e icon -m size -v small
+    $ thor bem:create -l level-name -b test -e icon -m size -v small
 
 Block in special technolody:
-    $ thor bem:create -b test -T sass
+    $ thor bem:create -l level-name -b test -T sass
 
 Element in special tehcnology creates like block. List of know technologies you can see in bem.rb initializer. You can customize it. After block, element or mod creating generator adds to level assets (level_name/.bem/assets) main file (level) require string. Ex:
 ```sass
-//= require ../../../../test/elements/__field/__field.css.sass
+//= require ../../../../test/__field/test__field.css.sass
 ```
 You should remember! You are not in any case should not be writing styles and scripts in assets levels and application files.
 Use them like configuration files, for require only. This involves using Sprockets.
@@ -166,9 +134,6 @@ For access to custom essence properties use 'ctx' method.
 
 ### You want more BEM?
 
-You can use CSSO instead of YUI compressor for precompile assets. 
-Read [here](http://habrahabr.ru/post/181880/) about it.
-
-If you want it, please watch [here](https://github.com/Vasfed/csso-rails).
+Go to [bem.info](http://bem.info)
 
 #### Think better. Stay BEMed!
