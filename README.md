@@ -23,11 +23,10 @@ Then you should run install generator:
     $ rails g bemonrails:install
 
 You should restart server after install.
-You can customize everythink in initializers/bem.rb!
 
 ## Usage
 
-You can create blocks, elements, modificators and levels. Default folder structure:
+You can create blocks, elements and them modificators on levels. Default folder structure:
 
 - **bem**
     - **level_name**
@@ -81,8 +80,7 @@ Element in special tehcnology creates like block. List of know technologies you 
 ```sass
 //= require ../../../../test/__field/test__field.css.sass
 ```
-You should remember! You are not in any case should not be writing styles and scripts in assets levels and application files.
-Use them like configuration files, for require only. This involves using Sprockets.
+You should remember! You are not in any case should not be writing styles and scripts in assets levels and application files. Use them like configuration files, for require only. This involves using Sprockets.
 
 ### Rendering
 
